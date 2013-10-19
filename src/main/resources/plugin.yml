@@ -1,0 +1,7 @@
+author: ZephireNZ
+database: false
+main: nz.co.noirland.noirstore.NoirStore
+name: NoirStore
+startup: postworld
+version: ${version}
+depend: [SQLibrary, Vault]
