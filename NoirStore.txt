@@ -7,6 +7,16 @@ $500.54
 $230.83
 24h: +$7.29
 
+### TODOS ###
+DONE: Get item data and price from files
+DONE: Methods to interpret item data per material
+TODO: Create database to store item numbers
+TODO: Create Database class for interfacing with db
+TODO: Create sign create/click listener
+
+Future versions:
+TODO: Database for past prices/purchases
+
 
 ### Creating Signs ###
 Player MUST have permission to do so
@@ -17,3 +27,61 @@ Sign updates to show price, colours title, and is ready to go
 
 ### Permissions ###
 noirstore.create # Permission to create signs
+
+
+### Database Structure ###
+-- signs --
+int x
+int y
+int z
+String world
+int i_id
+int sell
+
+PRIMARY KEY x, y, z, world
+FOREIGN KEY i_id
+
+-- items --
+int i_id
+String item
+String data
+long amount
+
+PRIMARY KEY item, data
+
+
+
+### YAML Structure ###
+
+plugins/NoirStore/items/material.yml:
+    material: BUKKIT_NAME
+    data: MATERIAL_DATA
+    prices:
+      max:
+        buy: 1004
+        sell: 720
+      5-10:
+        buy: 600
+        sell: 460
+      12:
+        buy: 522
+        sell: 439.24
+      min:
+        buy: 340
+        sell: 127.30
+plugins/NoirStore/items/red-wool.yml:
+    material: WOOL
+    data: RED # Dye Colour
+    prices:
+      max:
+        buy: 1004
+        sell: 720
+      5-10:
+        buy: 600
+        sell: 460
+      12:
+        buy: 522
+        sell: 439.24
+      min:
+        buy: 340
+        sell: 127.30
