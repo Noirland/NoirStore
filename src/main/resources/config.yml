@@ -1,0 +1,10 @@
+noirstore:
+    debug: false
+    mysql:
+        username:
+        password:
+        host: localhost
+        port: 3306
+        database:
+        prefix: store_
+

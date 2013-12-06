@@ -40,8 +40,8 @@ public class ItemConfig extends Config {
         return plugin.getResource("item.yml");
     }
 
-    public String getMaterial() { return config.getString("material"); }
-    public String getData() { return config.getString("data"); }
+    public String getMaterial() { return config.getString("material", ""); }
+    public String getData() { return config.getString("data", ""); }
 
     public ArrayList<PriceRange> getPrices() {
 
