@@ -1,17 +1,11 @@
 ### Sign Layout ###
-[Noir Buy]
-$500.54
-24h: +$10.26
-
-[Noir Sell]
-$230.83
-24h: +$7.29
+TODO: Sign Layout (Redo)
 
 ### TODOS ###
 DONE: Get item data and price from files
 DONE: Methods to interpret item data per material
-TODO: Create database to store item numbers
-TODO: Create Database class for interfacing with db
+DONE: Create database schema
+DONE: Create Database class for interfacing with db
 TODO: Create sign create/click listener
 
 Future versions:
@@ -24,10 +18,18 @@ Place a sign with [noir buy/sell] as top line
 Places template sign, asks creator to right-click sign to set its material (includes stack size)
 Sign updates to show price, colours title, and is ready to go
 
+### Preparing Items ###
+/ Loop through items directory
+/ Create TradeItem for each config file, wtih item, data, and prices
+- Get item data from database, adding amount and i_id to TradeItem
+  - If item data doesn't exist in db, create it with amount 0
 
 ### Permissions ###
 noirstore.create # Permission to create signs
 
+### Commands ###
+/noirstore override [price] # Followed by right-clicking a sign to override
+/noirstore reload # reloads plugin file, as well as item configs
 
 ### Database Structure ###
 -- signs --
@@ -36,7 +38,6 @@ int y
 int z
 String world
 int i_id
-int sell
 
 PRIMARY KEY x, y, z, world
 FOREIGN KEY i_id

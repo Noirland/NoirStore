@@ -1,5 +1,6 @@
 package nz.co.noirland.noirstore;
 
+import nz.co.noirland.noirstore.database.SQLDatabase;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
@@ -7,22 +8,21 @@ import java.util.ArrayList;
 public class TradeItem {
 
     private ItemStack item;
-    private long amount;
+    private int amount;
+    private int item_id;
     private ArrayList<PriceRange> prices = new ArrayList<PriceRange>();
+    private SQLDatabase db = SQLDatabase.inst();
 
-    public TradeItem(ItemStack item, long amount, ArrayList<PriceRange> prices) {
+    public TradeItem(int item_id, ItemStack item, int amount, ArrayList<PriceRange> prices) {
         this.item = item;
         this.amount = amount;
         this.prices = prices;
+        this.item_id = item_id;
     }
 
 
     public ItemStack getItem() {
         return item;
-    }
-
-    public void setItem(ItemStack item) {
-        this.item = item;
     }
 
     public long getAmount() {
@@ -31,5 +31,14 @@ public class TradeItem {
 
     public void setAmount(int amount) {
         this.amount = amount;
+        db.updateItemAmount(item_id, amount);
+    }
+
+    public int getId() {
+        return item_id;
+    }
+
+    public ArrayList<PriceRange> getPrices() {
+        return prices;
     }
 }
