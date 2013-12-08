@@ -1,10 +1,15 @@
 package nz.co.noirland.noirstore.database;
 
 import nz.co.noirland.noirstore.NoirStore;
+import nz.co.noirland.noirstore.TradeItem;
+import nz.co.noirland.noirstore.TradeSign;
 import nz.co.noirland.noirstore.config.PluginConfig;
 import nz.co.noirland.noirstore.database.schema.Schema;
+import org.bukkit.Location;
+import org.bukkit.World;
 
 import java.sql.*;
+import java.util.ArrayList;
 
 public class SQLDatabase {
 
@@ -119,6 +124,69 @@ public class SQLDatabase {
         } catch (SQLException e) {
             return false; // Query failed, table does not exist.
         }
+    }
+
+    public void addSign(TradeSign sign) {
+
+        Location loc = sign.getLocation();
+
+        PreparedStatement query = prepareStatement(DatabaseQueries.INSERT_SIGN);
+        try {
+            query.setInt(1, loc.getBlockX());
+            query.setInt(2, loc.getBlockY());
+            query.setInt(3, loc.getBlockZ());
+            query.setString(4, loc.getWorld().getName());
+            query.setInt(5, sign.getItem().getId());
+            query.setInt(6, sign.getSellAmount());
+
+            query.execute();
+
+        }catch(SQLException e) {
+            plugin.debug("Could not insert sign!", e);
+        }
+    }
+
+    public void removeSign(TradeSign sign) {
+        Location loc = sign.getLocation();
+
+        PreparedStatement query = prepareStatement(DatabaseQueries.REMOVE_SIGN_BY_LOCATION);
+        try {
+            query.setInt(1, loc.getBlockX());
+            query.setInt(2, loc.getBlockY());
+            query.setInt(3, loc.getBlockZ());
+            query.setString(4, loc.getWorld().getName());
+            query.executeUpdate();
+
+        }catch(SQLException e) {
+            plugin.debug("Could not delete sign at " + loc.toString(), e);
+        }
+    }
+
+    public ArrayList<TradeSign> loadSigns() {
+
+        ArrayList<TradeSign> signs = new ArrayList<TradeSign>();
+
+        PreparedStatement query = prepareStatement(DatabaseQueries.GET_AlL_SIGNS);
+        try {
+            ResultSet res = query.executeQuery();
+
+            while(res.next()) {
+                TradeItem item = plugin.getTradeItem(res.getInt("item_id"));
+                if(item == null) {
+                    plugin.debug("sign at row " + res.getRow() + " ID is nonexistant!");
+                    continue;
+                }
+                World world = plugin.getServer().getWorld(res.getString("world"));
+                Location loc = new Location(world, res.getInt("x"), res.getInt("y"),res.getInt("z"));
+                TradeSign sign = new TradeSign(item, res.getInt("sell"), loc);
+                plugin.addTradeSign(sign);
+            }
+        } catch (SQLException e) {
+            plugin.disable("Could not get signs from database!", e);
+        }
+
+
+        return signs;
     }
 
     // -- DATABASE FUNCTIONS -- //

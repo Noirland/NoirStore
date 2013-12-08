@@ -1,6 +1,8 @@
 package nz.co.noirland.noirstore;
 
 import org.bukkit.*;
+import org.bukkit.block.Block;
+import org.bukkit.block.Sign;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.*;
 
@@ -69,6 +71,16 @@ public abstract class Util {
                 break;
         }
         return ret;
+    }
+
+    public static boolean isTradeSign(Block block) {
+        if(!isSign(block)) return false;
+        Sign sign = (Sign) block.getState();
+        return ChatColor.stripColor(sign.getLine(0)).equalsIgnoreCase(TradeSign.SIGN_TITLE);
+    }
+
+    public static boolean isSign(Block block) {
+        return block != null && (block.getState() instanceof Sign);
     }
 
 }
