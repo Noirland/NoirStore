@@ -1,14 +1,11 @@
 package nz.co.noirland.noirstore.config;
 
 import nz.co.noirland.noirstore.PriceRange;
-import nz.co.noirland.noirstore.Util;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.io.File;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class ItemConfig extends Config {
 
@@ -48,24 +45,15 @@ public class ItemConfig extends Config {
         ArrayList<PriceRange> ret = new ArrayList<PriceRange>();
 
         ConfigurationSection pricesConfig = config.getConfigurationSection("prices");
-        int maxUpper = 0;
-        int maxLower = Integer.MAX_VALUE;
 
-        for(String range : pricesConfig.getKeys(false)) {
+        Set<String> keysSet = pricesConfig.getKeys(false);
+        List<String> keys = new ArrayList<String>(keysSet);
 
-            PriceRange pRange = Util.parseRange(range, pricesConfig.getDouble(range + ".buy"), pricesConfig.getDouble(range + ".sell"));
-
-            if(pRange == null) continue;
-
-            if(pRange.getLower() < maxLower) maxLower = pRange.getLower();
-            if(pRange.getUpper() > maxUpper) maxUpper = pRange.getUpper();
-
-            ret.add(pRange);
-
+        for(int i = 0;i < (keys.size()-1);i++) {
+            int lower = Integer.parseInt(keys.get(i));
+            int upper = Integer.parseInt(keys.get(i+1));
+            ret.add(new PriceRange(lower, upper, pricesConfig.getLong(keys.get(i)), pricesConfig.getLong(keys.get(i+1))));
         }
-
-        ret.add(new PriceRange(0, maxLower-1, pricesConfig.getDouble("max.buy"), pricesConfig.getDouble("max.sell")));
-        ret.add(new PriceRange(maxUpper+1, Integer.MAX_VALUE, pricesConfig.getDouble("min.buy"), pricesConfig.getDouble("min.sell")));
 
         return ret;
 

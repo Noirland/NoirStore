@@ -38,6 +38,16 @@ public class TradeItem {
         return item_id;
     }
 
+    public long getPrice() {
+        for(PriceRange pRange : prices) {
+            if(pRange.canCalculate(amount)) {
+                return pRange.calculatePrice(amount);
+            }
+        }
+        NoirStore.inst().debug("Couldn't find a price for " + item.toString());
+        return 0;
+    }
+
     public ArrayList<PriceRange> getPrices() {
         return prices;
     }

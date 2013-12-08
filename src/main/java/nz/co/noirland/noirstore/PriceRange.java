@@ -2,35 +2,33 @@ package nz.co.noirland.noirstore;
 
 public class PriceRange {
 
-    private int lower;
-    private int upper;
-    private double buy;
-    private double sell;
+    private int maxAmount;
+    private int minAmount;
+    private double gradient;
+    private long basePrice;
 
-    public PriceRange(int lower, int upper, double buy, double sell) {
-        this.lower = lower;
-        this.upper = upper;
-        this.buy = buy;
-        this.sell = sell;
+    public PriceRange(int lowerAmount, int upperAmount, long lowerPrice, long upperPrice) {
+
+
+        basePrice = Math.max(lowerPrice, upperPrice);
+        minAmount = lowerAmount;
+        maxAmount = upperAmount;
+
+        // 'rise over run'
+        gradient = (upperPrice - lowerPrice) / (upperAmount - lowerAmount);
+
     }
 
-    public boolean isInRange(double val) {
-        return val >= lower && val <= upper;
+    public boolean canCalculate(int amount) {
+        return amount <= maxAmount && amount >= minAmount;
     }
 
-    public double getBuyPrice() {
-        return buy;
+    public long calculatePrice(int amount) {
+        int relAmount = amount - minAmount;
+
+        return (long) (gradient * relAmount) + basePrice;
+
     }
 
-    public double getSellPrice() {
-        return sell;
-    }
 
-    public int getLower() {
-        return lower;
-    }
-
-    public int getUpper() {
-        return upper;
-    }
 }

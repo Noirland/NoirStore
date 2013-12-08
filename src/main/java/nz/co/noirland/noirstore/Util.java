@@ -71,27 +71,4 @@ public abstract class Util {
         return ret;
     }
 
-    public static PriceRange parseRange(String range, double buy, double sell) {
-
-        int lower = 0;
-        int upper = 0;
-
-        if(range.equals("max") || range.equals("min")) return null;
-
-        if(range.contains("-")) {
-            String[] bounds = range.split("-");
-            lower = Integer.parseInt(bounds[0]);
-            upper = Integer.parseInt(bounds[1]);
-        }else{
-            try {
-                upper = Integer.parseInt(range);
-                lower = upper;
-            }catch(NumberFormatException e) {
-                return null;
-            }
-        }
-
-        return new PriceRange(lower, upper, buy, sell);
-    }
-
 }

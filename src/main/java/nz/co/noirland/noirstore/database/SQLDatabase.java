@@ -84,9 +84,9 @@ public class SQLDatabase {
 
         PreparedStatement query = prepareStatement(DatabaseQueries.UPDATE_ITEM_AMOUNT_BY_ID);
         try{
-            query.setInt(1, id);
             query.setInt(1, newAmount);
-            query.execute();
+            query.setInt(2, id);
+            query.executeUpdate();
         } catch(SQLException e) {
             plugin.debug("Could not update item amount", e);
         }
@@ -97,7 +97,6 @@ public class SQLDatabase {
         try{
             query.setInt(1, id);
             ResultSet res = query.executeQuery();
-            getNumRows(res);
             res.first();
             return res.getInt("amount");
         } catch(SQLException e) {
