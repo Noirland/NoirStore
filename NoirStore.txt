@@ -1,5 +1,10 @@
 ### Sign Layout ###
 TODO: Sign Layout (Redo)
+[NoirStore]
+--User Text--
+$500
+387
+
 
 ### TODOS ###
 DONE: Get item data and price from files
@@ -58,31 +63,13 @@ plugins/NoirStore/items/material.yml:
     material: BUKKIT_NAME
     data: MATERIAL_DATA
     prices:
-      max:
-        buy: 1004
-        sell: 720
-      5-10:
-        buy: 600
-        sell: 460
-      12:
-        buy: 522
-        sell: 439.24
-      min:
-        buy: 340
-        sell: 127.30
+      5: 1000
+      10: 735
+      75: 50
 plugins/NoirStore/items/red-wool.yml:
     material: WOOL
     data: RED # Dye Colour
     prices:
-      max:
-        buy: 1004
-        sell: 720
-      5-10:
-        buy: 600
-        sell: 460
-      12:
-        buy: 522
-        sell: 439.24
-      min:
-        buy: 340
-        sell: 127.30
+      5: 1000
+      10: 735
+      75: 50
