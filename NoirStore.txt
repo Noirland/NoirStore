@@ -19,7 +19,7 @@ TODO: Database for past prices/purchases
 
 ### Creating Signs ###
 Player MUST have permission to do so
-Place a sign with [noir buy/sell] as top line
+Place a sign with [NoirTrade] as top line, and anything on 2nd
 Places template sign, asks creator to right-click sign to set its material (includes stack size)
 Sign updates to show price, colours title, and is ready to go
 
@@ -43,6 +43,7 @@ int y
 int z
 String world
 int i_id
+int sell
 
 PRIMARY KEY x, y, z, world
 FOREIGN KEY i_id

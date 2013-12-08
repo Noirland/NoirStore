@@ -1,10 +1,11 @@
 package nz.co.noirland.noirstore;
 
-import net.milkbowl.vault.economy.Economy;
 import nz.co.noirland.noirstore.config.ItemConfig;
 import nz.co.noirland.noirstore.config.PluginConfig;
 import nz.co.noirland.noirstore.database.SQLDatabase;
 import org.apache.commons.lang.exception.ExceptionUtils;
+import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -15,6 +16,7 @@ public class NoirStore extends JavaPlugin {
 
     private static NoirStore inst;
     private static ArrayList<TradeItem> items = new ArrayList<TradeItem>();
+    private static ArrayList<TradeSign> signs = new ArrayList<TradeSign>();
     private SQLDatabase db;
 
     public static NoirStore inst() {
@@ -27,9 +29,12 @@ public class NoirStore extends JavaPlugin {
         db = SQLDatabase.inst();
         db.checkSchema();
 
-        Economy econ = getServer().getServicesManager().getRegistration(Economy.class).getProvider();
+        getServer().getPluginManager().registerEvents(new SignListener(), this);
+
+//        Economy econ = getServer().getServicesManager().getRegistration(Economy.class).getProvider();
 
         loadTradeItems();
+        db.loadSigns();
     }
 
     @Override
@@ -62,6 +67,36 @@ public class NoirStore extends JavaPlugin {
             TradeItem tradeItem = new TradeItem(id, stack, amount, itemConfig.getPrices());
             items.add(tradeItem);
         }
+    }
+
+    public TradeItem getTradeItem(ItemStack item) {
+
+        for(TradeItem ti : items) {
+            ItemStack stack = ti.getItem();
+            if(stack.getType().equals(item.getType()) && stack.getData().equals(item.getData())) return ti;
+        }
+        return null;
+    }
+
+    public TradeItem getTradeItem(int item_id) {
+
+        for(TradeItem ti : items) {
+            if(ti.getId() == item_id) return ti;
+        }
+        return null;
+    }
+
+    public void addTradeSign(TradeSign sign) {
+        signs.add(sign);
+    }
+
+    public ArrayList<TradeSign> getTradeSigns() {
+        return signs;
+    }
+
+    public void removeSign(TradeSign sign) {
+        signs.remove(sign);
+        db.removeSign(sign);
     }
 
     /**
@@ -111,5 +146,9 @@ public class NoirStore extends JavaPlugin {
     public void disable(String error, Throwable e) {
         debug(e);
         disable(error);
+    }
+
+    public void sendMessage(Player player, String msg) {
+        player.sendMessage(ChatColor.RED + "[NoirStore] " + ChatColor.RESET + msg);
     }
 }
