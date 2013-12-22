@@ -43,7 +43,7 @@ public class TradeSign {
         long amount = item.getAmount();
         Sign sign = getSign();
 
-        if(amount == 0) {
+        if(amount < sellAmount) {
             sign.setLine(0, ChatColor.DARK_RED + SIGN_TITLE);
         }else{
             sign.setLine(0, ChatColor.DARK_GREEN + SIGN_TITLE);
