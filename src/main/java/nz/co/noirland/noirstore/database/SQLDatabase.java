@@ -91,7 +91,7 @@ public class SQLDatabase {
         try{
             query.setInt(1, newAmount);
             query.setInt(2, id);
-            query.executeUpdate();
+            runStatementAsync(query);
         } catch(SQLException e) {
             plugin.debug("Could not update item amount", e);
         }
@@ -139,7 +139,7 @@ public class SQLDatabase {
             query.setInt(5, sign.getItem().getId());
             query.setInt(6, sign.getSellAmount());
 
-            query.execute();
+            runStatementAsync(query);
 
         }catch(SQLException e) {
             plugin.debug("Could not insert sign!", e);
@@ -155,8 +155,8 @@ public class SQLDatabase {
             query.setInt(2, loc.getBlockY());
             query.setInt(3, loc.getBlockZ());
             query.setString(4, loc.getWorld().getName());
-            query.executeUpdate();
 
+            runStatementAsync(query);
         }catch(SQLException e) {
             plugin.debug("Could not delete sign at " + loc.toString(), e);
         }
@@ -179,7 +179,7 @@ public class SQLDatabase {
                 World world = plugin.getServer().getWorld(res.getString("world"));
                 Location loc = new Location(world, res.getInt("x"), res.getInt("y"),res.getInt("z"));
                 TradeSign sign = new TradeSign(item, res.getInt("sell"), loc);
-                plugin.addTradeSign(sign);
+                plugin.addTradeSign(sign, false);
             }
         } catch (SQLException e) {
             plugin.disable("Could not get signs from database!", e);
@@ -241,6 +241,10 @@ public class SQLDatabase {
             plugin.disable("Could not get database schema!", e);
             return 0;
         }
+    }
+
+    public void runStatementAsync(PreparedStatement statement) {
+        new AsyncStatementTask(statement).runTaskAsynchronously(plugin);
     }
 
     // -- UTILITY FUNCTIONS -- //

@@ -19,6 +19,14 @@ public class PriceRange {
 
     }
 
+    public int getMaxAmount() {
+        return maxAmount;
+    }
+
+    public int getMinAmount() {
+        return minAmount;
+    }
+
     public boolean canCalculate(int amount) {
         return amount <= maxAmount && amount >= minAmount;
     }
