@@ -58,12 +58,14 @@ public class NoirStore extends JavaPlugin {
             String material = itemConfig.getMaterial();
             String data = itemConfig.getData();
             ItemStack stack = Util.createItem(material, data);
+
+            double sellPercent = itemConfig.getSellPercent() / 100.0;
             int id = db.getItemId(material, data);
             if(id == -1) {
                 id = db.addItem(material, data);
             }
             int amount = db.getItemAmount(id);
-            TradeItem tradeItem = new TradeItem(id, stack, amount, itemConfig.getPrices());
+            TradeItem tradeItem = new TradeItem(id, stack, amount, itemConfig.getPrices(), sellPercent);
             items.add(tradeItem);
         }
     }

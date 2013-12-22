@@ -39,6 +39,7 @@ public class TradeSign {
 
     public void update() {
         long price = item.getPrice();
+        long sellPrice = item.getSellPrice();
         long amount = item.getAmount();
         Sign sign = getSign();
 
@@ -47,7 +48,7 @@ public class TradeSign {
         }else{
             sign.setLine(0, ChatColor.DARK_GREEN + SIGN_TITLE);
         }
-        sign.setLine(2, "$" + price*sellAmount);
+        sign.setLine(2, "$" + price*sellAmount + " : $" + sellPrice*sellAmount);
         sign.setLine(3, Long.toString(amount));
         sign.update();
     }
