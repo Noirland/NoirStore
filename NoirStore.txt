@@ -11,11 +11,11 @@ DONE: Get item data and price from files
 DONE: Methods to interpret item data per material
 DONE: Create database schema
 DONE: Create Database class for interfacing with db
-TODO: Create sign create/click listener
+DONE: Create sign create/click listener
+TODO: Add sell percentage for items, and show sell price on signs
 
 Future versions:
 TODO: Database for past prices/purchases
-
 
 ### Creating Signs ###
 Player MUST have permission to do so

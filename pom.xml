@@ -18,7 +18,7 @@
         </repository>
         <repository>
             <id>brynley-repo</id>
-            <url>http://repo.brynley.tk/content/groups/public/</url>
+            <url>http://repo.arcadium.net.nz/content/groups/public/</url>
         </repository>
         <repository>
             <id>vault-repo</id>
@@ -30,7 +30,7 @@
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>bukkit</artifactId>
-            <version>1.7.2-R0.1-SNAPSHOT</version>
+            <version>1.7.2-R0.2-SNAPSHOT</version>
             <type>jar</type>
             <scope>compile</scope>
         </dependency>
@@ -90,12 +90,12 @@
         <repository>
             <id>brynley-repo</id>
             <name>Releases</name>
-            <url>http://repo.brynley.tk/content/repositories/releases</url>
+            <url>http://repo.arcadium.net.nz/content/repositories/releases</url>
         </repository>
         <snapshotRepository>
             <id>brynley-repo</id>
             <name>Snapshots</name>
-            <url>http://repo.brynley.tk/content/repositories/snapshots/</url>
+            <url>http://repo.arcadium.net.nz/content/repositories/snapshots/</url>
         </snapshotRepository>
     </distributionManagement>
     

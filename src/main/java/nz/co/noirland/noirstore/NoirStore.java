@@ -5,6 +5,7 @@ import nz.co.noirland.noirstore.config.PluginConfig;
 import nz.co.noirland.noirstore.database.SQLDatabase;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -30,8 +31,6 @@ public class NoirStore extends JavaPlugin {
         db.checkSchema();
 
         getServer().getPluginManager().registerEvents(new SignListener(), this);
-
-//        Economy econ = getServer().getServicesManager().getRegistration(Economy.class).getProvider();
 
         loadTradeItems();
         db.loadSigns();
@@ -73,7 +72,7 @@ public class NoirStore extends JavaPlugin {
 
         for(TradeItem ti : items) {
             ItemStack stack = ti.getItem();
-            if(stack.getType().equals(item.getType()) && stack.getData().equals(item.getData())) return ti;
+            if(item.isSimilar(stack)) return ti;
         }
         return null;
     }
@@ -86,8 +85,16 @@ public class NoirStore extends JavaPlugin {
         return null;
     }
 
-    public void addTradeSign(TradeSign sign) {
+    public void addTradeSign(TradeSign sign, boolean addToDB) {
+        if(addToDB) db.addSign(sign);
         signs.add(sign);
+    }
+
+    public TradeSign getTradeSign(Location loc) {
+        for(TradeSign sign : signs) {
+            if(sign.getLocation().equals(loc)) return sign;
+        }
+        return null;
     }
 
     public ArrayList<TradeSign> getTradeSigns() {
@@ -97,6 +104,12 @@ public class NoirStore extends JavaPlugin {
     public void removeSign(TradeSign sign) {
         signs.remove(sign);
         db.removeSign(sign);
+    }
+
+    public void updateSigns(TradeItem item) {
+        for(TradeSign sign : signs) {
+            if(sign.getItem() == item) sign.update();
+        }
     }
 
     /**

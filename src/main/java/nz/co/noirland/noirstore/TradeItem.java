@@ -11,6 +11,8 @@ public class TradeItem {
     private int amount;
     private int item_id;
     private ArrayList<PriceRange> prices = new ArrayList<PriceRange>();
+    private PriceRange minPrice;
+    private PriceRange maxPrice;
     private SQLDatabase db = SQLDatabase.inst();
 
     public TradeItem(int item_id, ItemStack item, int amount, ArrayList<PriceRange> prices) {
@@ -18,6 +20,16 @@ public class TradeItem {
         this.amount = amount;
         this.prices = prices;
         this.item_id = item_id;
+        minPrice = prices.get(0);
+        maxPrice = prices.get(0);
+        for(PriceRange price : prices) {
+            if(price.getMinAmount() < minPrice.getMinAmount()) {
+                minPrice = price;
+            }
+            if(price.getMaxAmount() > maxPrice.getMaxAmount()) {
+                maxPrice = price;
+            }
+        }
     }
 
 
@@ -25,7 +37,7 @@ public class TradeItem {
         return item;
     }
 
-    public long getAmount() {
+    public int getAmount() {
         return amount;
     }
 
@@ -43,6 +55,12 @@ public class TradeItem {
             if(pRange.canCalculate(amount)) {
                 return pRange.calculatePrice(amount);
             }
+        }
+        if(amount < minPrice.getMinAmount()) {
+            return minPrice.calculatePrice(minPrice.getMinAmount());
+        }
+        if(amount > maxPrice.getMaxAmount()) {
+            return maxPrice.calculatePrice(maxPrice.getMaxAmount());
         }
         NoirStore.inst().debug("Couldn't find a price for " + item.toString());
         return 0;
