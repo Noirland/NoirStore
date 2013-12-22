@@ -119,7 +119,7 @@ public class SignListener implements Listener {
             return;
         }
         if(!econ.canWithdraw(player, price)) {
-            plugin.sendMessage(player, "You can't afford that, you need $" + (price - econ.getBalance(player)) + ".");
+            plugin.sendMessage(player, "You can't afford that, you need $" + (price*sign.getSellAmount() - econ.getBalance(player)) + ".");
             return;
         }
         econ.withdraw(player, price*sign.getSellAmount());
@@ -149,7 +149,7 @@ public class SignListener implements Listener {
             plugin.sendMessage(player, "You don't have items enough to sell.");
             return;
         }
-        econ.deposit(player, item.getPrice()*sign.getSellAmount());
+        econ.deposit(player, item.getSellPrice()*sign.getSellAmount());
         item.setAmount(item.getAmount() + sign.getSellAmount());
         if(hand.getAmount() - sign.getSellAmount() <= 0) {
             player.setItemInHand(null);

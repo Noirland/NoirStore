@@ -17,12 +17,14 @@ public class PluginConfig extends Config {
     }
 
     // MySQL
-    public String  getPrefix()   { return config.getString("noirstore.mysql.prefix", "store_"); }
-    public String  getDatabase() { return config.getString("noirstore.mysql.database"); }
-    public String  getUsername() { return config.getString("noirstore.mysql.username"); }
-    public String  getPassword() { return config.getString("noirstore.mysql.password"); }
-    public int     getPort()     { return config.getInt   ("noirstore.mysql.port", 3306); }
-    public String  getHost()     { return config.getString("noirstore.mysql.host", "localhost"); }
+    public String getPrefix()   { return config.getString("noirstore.mysql.prefix", "store_"); }
+    public String getDatabase() { return config.getString("noirstore.mysql.database"); }
+    public String getUsername() { return config.getString("noirstore.mysql.username"); }
+    public String getPassword() { return config.getString("noirstore.mysql.password"); }
+    public int    getPort()     { return config.getInt   ("noirstore.mysql.port", 3306); }
+    public String getHost()     { return config.getString("noirstore.mysql.host", "localhost"); }
 
-    public boolean getDebug()    { return config.getBoolean("noirstore.debug", false);}
+    public int getSellPercent() { return config.getInt("noirstore.sellpercent", 0); }
+
+    public boolean getDebug() { return config.getBoolean("noirstore.debug", false);}
 }

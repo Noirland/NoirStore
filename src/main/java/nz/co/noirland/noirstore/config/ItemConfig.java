@@ -39,6 +39,7 @@ public class ItemConfig extends Config {
 
     public String getMaterial() { return config.getString("material", ""); }
     public String getData() { return config.getString("data", ""); }
+    public int getSellPercent() { return config.getInt("sellpercent", PluginConfig.inst().getSellPercent()); }
 
     public ArrayList<PriceRange> getPrices() {
 

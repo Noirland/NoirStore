@@ -1,5 +1,6 @@
 noirstore:
     debug: false
+    sellpercent: 5
     mysql:
         username:
         password:
