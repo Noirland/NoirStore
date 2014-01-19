@@ -38,8 +38,8 @@ public class TradeSign {
     }
 
     public void update() {
-        long price = item.getPrice();
-        long sellPrice = item.getSellPrice();
+        double price = item.getPrice();
+        double sellPrice = item.getSellPrice();
         long amount = item.getAmount();
         Sign sign = getSign();
 
