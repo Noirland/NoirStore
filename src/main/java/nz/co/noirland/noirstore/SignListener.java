@@ -113,12 +113,12 @@ public class SignListener implements Listener {
     private void buyItems(Player player, TradeSign sign) {
         EconManager econ = EconManager.inst();
         TradeItem item = sign.getItem();
-        long price = item.getPrice();
+        double price = item.getPrice();
         if(item.getAmount() < sign.getSellAmount()) {
             plugin.sendMessage(player, "No stock available.");
             return;
         }
-        if(!econ.canWithdraw(player, price)) {
+        if(!econ.canWithdraw(player, price*sign.getSellAmount())) {
             plugin.sendMessage(player, "You can't afford that, you need $" + (price*sign.getSellAmount() - econ.getBalance(player)) + ".");
             return;
         }

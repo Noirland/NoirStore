@@ -52,7 +52,7 @@ public class TradeItem {
         return item_id;
     }
 
-    public long getPrice() {
+    public double getPrice() {
         for(PriceRange pRange : prices) {
             if(pRange.canCalculate(amount)) {
                 return pRange.calculatePrice(amount);
@@ -68,9 +68,9 @@ public class TradeItem {
         return 0;
     }
 
-    public long getSellPrice() {
-        long price = getPrice();
-        return (int) (price - (sellPercent * price));
+    public double getSellPrice() {
+        double price = getPrice();
+        return price - (sellPercent * price);
     }
 
     public ArrayList<PriceRange> getPrices() {
