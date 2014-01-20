@@ -18,6 +18,10 @@ public abstract class Util {
 
     @SuppressWarnings("deprecated")
     public static MaterialData parseMaterialData(Material material, String data) {
+        try{
+            int nRet = Integer.parseInt(data);
+            return new MaterialData(material, (byte) nRet);
+        }catch(NumberFormatException ignored) {}
         MaterialData ret;
         switch(material) {
             case WOOD:
