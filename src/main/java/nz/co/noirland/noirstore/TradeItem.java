@@ -3,6 +3,8 @@ package nz.co.noirland.noirstore;
 import nz.co.noirland.noirstore.database.SQLDatabase;
 import org.bukkit.inventory.ItemStack;
 
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public class TradeItem {
@@ -15,6 +17,12 @@ public class TradeItem {
     private PriceRange minPrice;
     private PriceRange maxPrice;
     private SQLDatabase db = SQLDatabase.inst();
+
+    public static DecimalFormat decFormat = new DecimalFormat("#.##");
+
+    static {
+        decFormat.setRoundingMode(RoundingMode.HALF_UP);
+    }
 
     public TradeItem(int item_id, ItemStack item, int amount, ArrayList<PriceRange> prices, double sellPercent) {
         this.item = item;
@@ -55,14 +63,14 @@ public class TradeItem {
     public double getPrice() {
         for(PriceRange pRange : prices) {
             if(pRange.canCalculate(amount)) {
-                return pRange.calculatePrice(amount);
+                return Util.round(pRange.calculatePrice(amount), decFormat);
             }
         }
         if(amount < minPrice.getMinAmount()) {
-            return minPrice.calculatePrice(minPrice.getMinAmount());
+            return Util.round(minPrice.calculatePrice(minPrice.getMinAmount()), decFormat);
         }
         if(amount > maxPrice.getMaxAmount()) {
-            return maxPrice.calculatePrice(maxPrice.getMaxAmount());
+            return Util.round(maxPrice.calculatePrice(maxPrice.getMaxAmount()), decFormat);
         }
         NoirStore.inst().debug("Couldn't find a price for " + item.toString());
         return 0;
@@ -70,10 +78,11 @@ public class TradeItem {
 
     public double getSellPrice() {
         double price = getPrice();
-        return price - (sellPercent * price);
+        return Util.round(price - (sellPercent * price), decFormat);
     }
 
     public ArrayList<PriceRange> getPrices() {
         return prices;
     }
+
 }

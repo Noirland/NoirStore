@@ -7,6 +7,8 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.*;
 
+import java.text.DecimalFormat;
+
 public abstract class Util {
 
     public static ItemStack createItem(String item, String data) {
@@ -98,6 +100,10 @@ public abstract class Util {
 
     public static boolean isSign(Block block) {
         return block != null && (block.getState() instanceof Sign);
+    }
+
+    public static double round(double in, DecimalFormat format) {
+        return Double.parseDouble(format.format(in));
     }
 
 }

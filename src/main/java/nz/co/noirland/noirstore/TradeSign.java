@@ -5,6 +5,8 @@ import org.bukkit.Location;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
 
+import java.text.DecimalFormat;
+
 public class TradeSign {
 
     private TradeItem item;
@@ -48,7 +50,8 @@ public class TradeSign {
         }else{
             sign.setLine(0, ChatColor.DARK_GREEN + SIGN_TITLE);
         }
-        sign.setLine(2, "$" + price*sellAmount + " : $" + sellPrice*sellAmount);
+        DecimalFormat format = TradeItem.decFormat;
+        sign.setLine(2, "$" + format.format(price*sellAmount) + " : $" + format.format(sellPrice*sellAmount));
         sign.setLine(3, Long.toString(amount));
         sign.update();
     }
