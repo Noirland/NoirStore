@@ -12,7 +12,6 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.material.Sign;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,7 +28,7 @@ public class SignListener implements Listener {
         Block block = event.getBlock();
         Player player = event.getPlayer();
 
-        if(!ChatColor.stripColor(event.getLine(0)).equalsIgnoreCase(TradeSign.SIGN_TITLE)) return;
+        if(!Util.isSign(event.getBlock())) return;
         if(!player.hasPermission("noirstore.create")) {
             event.setCancelled(true);
             block.breakNaturally();
@@ -48,9 +47,7 @@ public class SignListener implements Listener {
         while(it.hasNext()) {
             TradeSign sign = (TradeSign) it.next();
             Block sBlock = sign.getLocation().getBlock();
-            Sign sData = (Sign) sBlock.getState().getData();
-            Block attached = sBlock.getRelative(sData.getAttachedFace());
-            if(!attached.equals(block)) continue; // Has no trade sign attached
+            if(!Util.isSignAttachedToBlock(sBlock, block)) continue; // Not attached
             if(!event.getPlayer().hasPermission("noirstore.break")) {
                 plugin.sendMessage(event.getPlayer(), "You cannot break that sign!");
                 event.setCancelled(true);
@@ -58,6 +55,17 @@ public class SignListener implements Listener {
             }
             it.remove();
             plugin.removeSign(sign);
+        }
+        it = incompleteSigns.iterator();
+        while(it.hasNext()) {
+            Block sBlock = (Block) it.next();
+            if(!Util.isSignAttachedToBlock(sBlock, block)) continue;
+            if(!event.getPlayer().hasPermission("noirstore.break")) {
+                plugin.sendMessage(event.getPlayer(), "You cannot break that sign!");
+                event.setCancelled(true);
+                return;
+            }
+            it.remove();
         }
     }
 
