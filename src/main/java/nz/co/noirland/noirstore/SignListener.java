@@ -113,16 +113,16 @@ public class SignListener implements Listener {
     private void buyItems(Player player, TradeSign sign) {
         EconManager econ = EconManager.inst();
         TradeItem item = sign.getItem();
-        double price = item.getPrice();
+        double price = Util.round(item.getPrice() * sign.getSellAmount(), TradeItem.format);
         if(item.getAmount() < sign.getSellAmount()) {
             plugin.sendMessage(player, "No stock available.");
             return;
         }
-        if(!econ.canWithdraw(player, price*sign.getSellAmount())) {
+        if(!econ.canWithdraw(player, price)) {
             plugin.sendMessage(player, "You can't afford that, you need $" + (price*sign.getSellAmount() - econ.getBalance(player)) + ".");
             return;
         }
-        econ.withdraw(player, price*sign.getSellAmount());
+        econ.withdraw(player, price);
         item.setAmount(item.getAmount() - sign.getSellAmount());
 
         ItemStack stack = item.getItem();
@@ -149,7 +149,8 @@ public class SignListener implements Listener {
             plugin.sendMessage(player, "You don't have items enough to sell.");
             return;
         }
-        econ.deposit(player, item.getSellPrice()*sign.getSellAmount());
+        double price = Util.round(item.getSellPrice() * sign.getSellAmount(), TradeItem.format);
+        econ.deposit(player, price);
         item.setAmount(item.getAmount() + sign.getSellAmount());
         if(hand.getAmount() - sign.getSellAmount() <= 0) {
             player.setItemInHand(null);
