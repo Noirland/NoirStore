@@ -106,4 +106,10 @@ public abstract class Util {
         return Double.parseDouble(format.format(in));
     }
 
+    public static boolean isSignAttachedToBlock(Block sign, Block block) {
+        org.bukkit.material.Sign sData = (org.bukkit.material.Sign) sign.getState().getData();
+        Block attached = sign.getRelative(sData.getAttachedFace());
+        return attached.equals(block); // Has no trade sign attached
+    }
+
 }
