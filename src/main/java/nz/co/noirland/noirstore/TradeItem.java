@@ -18,10 +18,10 @@ public class TradeItem {
     private PriceRange maxPrice;
     private SQLDatabase db = SQLDatabase.inst();
 
-    public static DecimalFormat decFormat = new DecimalFormat("#.##");
+    public static DecimalFormat format = new DecimalFormat("#.##");
 
     static {
-        decFormat.setRoundingMode(RoundingMode.HALF_UP);
+        format.setRoundingMode(RoundingMode.HALF_UP);
     }
 
     public TradeItem(int item_id, ItemStack item, int amount, ArrayList<PriceRange> prices, double sellPercent) {
@@ -63,14 +63,14 @@ public class TradeItem {
     public double getPrice() {
         for(PriceRange pRange : prices) {
             if(pRange.canCalculate(amount)) {
-                return Util.round(pRange.calculatePrice(amount), decFormat);
+                return pRange.calculatePrice(amount);
             }
         }
         if(amount < minPrice.getMinAmount()) {
-            return Util.round(minPrice.calculatePrice(minPrice.getMinAmount()), decFormat);
+            return minPrice.calculatePrice(minPrice.getMinAmount());
         }
         if(amount > maxPrice.getMaxAmount()) {
-            return Util.round(maxPrice.calculatePrice(maxPrice.getMaxAmount()), decFormat);
+            return maxPrice.calculatePrice(maxPrice.getMaxAmount());
         }
         NoirStore.inst().debug("Couldn't find a price for " + item.toString());
         return 0;
@@ -78,11 +78,31 @@ public class TradeItem {
 
     public double getSellPrice() {
         double price = getPrice();
-        return Util.round(price - (sellPercent * price), decFormat);
+        return price - (sellPercent * price);
     }
 
     public ArrayList<PriceRange> getPrices() {
         return prices;
+    }
+
+    public String getFormattedPrice(int sellAmount) {
+        return formatPrice(getPrice()*sellAmount);
+    }
+    public String getFormattedSellPrice(int sellAmount) {
+        return  formatPrice(getSellPrice()*sellAmount);
+    }
+
+    private String formatPrice(double price) {
+        DecimalFormat format = TradeItem.format;
+        if(price != Math.rint(price)) {
+            format = new DecimalFormat("0.00");
+            format.setRoundingMode(RoundingMode.HALF_UP);
+        }
+        String ret = "$" + format.format(price);
+        if(ret.length() > 6) {
+            ret = "ERROR";
+        }
+        return ret;
     }
 
 }
