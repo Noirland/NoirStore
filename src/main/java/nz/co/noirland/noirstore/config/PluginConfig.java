@@ -26,5 +26,8 @@ public class PluginConfig extends Config {
 
     public int getSellPercent() { return config.getInt("noirstore.sellpercent", 0); }
 
+    public long getTradeDelay() { return config.getInt("noirstore.tradedelay", 0); }
+
+
     public boolean getDebug() { return config.getBoolean("noirstore.debug", false);}
 }
