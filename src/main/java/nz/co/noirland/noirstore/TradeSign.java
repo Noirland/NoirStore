@@ -46,8 +46,9 @@ public class TradeSign {
         }else{
             sign.setLine(0, ChatColor.DARK_GREEN + SIGN_TITLE);
         }
-        sign.setLine(2, item.getFormattedPrice(sellAmount) + " : " + item.getFormattedSellPrice(sellAmount));
-        sign.setLine(3, Long.toString(amount));
+        sign.setLine(1, "B: " + item.getFormattedPrice(sellAmount));
+        sign.setLine(2, "S: " + item.getFormattedSellPrice(sellAmount));
+        sign.setLine(3, ChatColor.DARK_GRAY + "" + getSellAmount() + ChatColor.RESET + " : " + Long.toString(amount));
         sign.update();
     }
 
