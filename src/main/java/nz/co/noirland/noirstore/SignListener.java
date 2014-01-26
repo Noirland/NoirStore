@@ -31,7 +31,7 @@ public class SignListener implements Listener {
         Block block = event.getBlock();
         Player player = event.getPlayer();
 
-        if(!Util.isSign(event.getBlock())) return;
+        if(!Util.isTradeLine(event.getLine(0))) return;
         if(!player.hasPermission("noirstore.create")) {
             event.setCancelled(true);
             block.breakNaturally();

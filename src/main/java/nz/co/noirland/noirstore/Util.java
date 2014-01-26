@@ -95,11 +95,15 @@ public abstract class Util {
     public static boolean isTradeSign(Block block) {
         if(!isSign(block)) return false;
         Sign sign = (Sign) block.getState();
-        return ChatColor.stripColor(sign.getLine(0)).equalsIgnoreCase(TradeSign.SIGN_TITLE);
+        return isTradeLine(sign.getLine(0));
     }
 
     public static boolean isSign(Block block) {
         return block != null && (block.getState() instanceof Sign);
+    }
+
+    public static boolean isTradeLine(String line) {
+        return ChatColor.stripColor(line).equalsIgnoreCase(TradeSign.SIGN_TITLE);
     }
 
     public static double round(double in, DecimalFormat format) {
