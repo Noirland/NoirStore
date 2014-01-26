@@ -4,4 +4,4 @@ main: nz.co.noirland.noirstore.NoirStore
 name: NoirStore
 startup: postworld
 version: ${version}
-depend: [SQLibrary, Vault]
+depend: [Vault]
