@@ -116,6 +116,8 @@ public class SignListener implements Listener {
                 break;
             case LEFT_CLICK_BLOCK:
                 //Player is selling to sign
+                if(player.getItemInHand().getType() == Material.AIR) return;
+
                 sellItems(player, sign);
                 lastTrade.put(player.getName(), System.currentTimeMillis());
                 break;
