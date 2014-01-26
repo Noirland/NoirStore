@@ -5,9 +5,9 @@ public class PriceRange {
     private int maxAmount;
     private int minAmount;
     private double gradient;
-    private long basePrice;
+    private double basePrice;
 
-    public PriceRange(int lowerAmount, int upperAmount, long lowerPrice, long upperPrice) {
+    public PriceRange(int lowerAmount, int upperAmount, double lowerPrice, double upperPrice) {
 
 
         basePrice = Math.max(lowerPrice, upperPrice);
@@ -19,14 +19,22 @@ public class PriceRange {
 
     }
 
+    public int getMaxAmount() {
+        return maxAmount;
+    }
+
+    public int getMinAmount() {
+        return minAmount;
+    }
+
     public boolean canCalculate(int amount) {
         return amount <= maxAmount && amount >= minAmount;
     }
 
-    public long calculatePrice(int amount) {
+    public double calculatePrice(int amount) {
         int relAmount = amount - minAmount;
 
-        return (long) (gradient * relAmount) + basePrice;
+        return (gradient * relAmount) + basePrice;
 
     }
 

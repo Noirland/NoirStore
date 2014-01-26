@@ -10,24 +10,22 @@ public abstract class Schema {
 
     private static SortedMap<Integer, Schema> schemas = new TreeMap<Integer, Schema>();
 
-    private static void putSchemas() {
+    static {
         if(schemas.isEmpty()) {
             schemas.put(1, new Schema1());
+            schemas.put(2, new Schema2());
         }
     }
 
     public static Map<Integer, Schema> getSchemas() {
-        putSchemas();
         return schemas;
     }
 
     public static int getCurrentSchema() {
-        putSchemas();
         return schemas.lastKey();
     }
 
     public static Schema getSchema(int version) {
-        putSchemas();
         if(schemas.containsKey(version)) {
             return schemas.get(version);
         }else{

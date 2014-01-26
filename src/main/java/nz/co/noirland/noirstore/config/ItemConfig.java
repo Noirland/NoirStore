@@ -39,6 +39,7 @@ public class ItemConfig extends Config {
 
     public String getMaterial() { return config.getString("material", ""); }
     public String getData() { return config.getString("data", ""); }
+    public int getSellPercent() { return config.getInt("sellpercent", PluginConfig.inst().getSellPercent()); }
 
     public ArrayList<PriceRange> getPrices() {
 
@@ -52,7 +53,7 @@ public class ItemConfig extends Config {
         for(int i = 0;i < (keys.size()-1);i++) {
             int lower = Integer.parseInt(keys.get(i));
             int upper = Integer.parseInt(keys.get(i+1));
-            ret.add(new PriceRange(lower, upper, pricesConfig.getLong(keys.get(i)), pricesConfig.getLong(keys.get(i+1))));
+            ret.add(new PriceRange(lower, upper, pricesConfig.getDouble(keys.get(i)), pricesConfig.getDouble(keys.get(i+1))));
         }
 
         return ret;
