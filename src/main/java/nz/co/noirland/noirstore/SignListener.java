@@ -1,5 +1,6 @@
 package nz.co.noirland.noirstore;
 
+import nz.co.noirland.noirstore.config.PluginConfig;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -16,11 +17,13 @@ import org.bukkit.inventory.ItemStack;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.TreeMap;
 
 public class SignListener implements Listener {
 
     private ArrayList<Block> incompleteSigns = new ArrayList<Block>();
     private NoirStore plugin = NoirStore.inst();
+    private TreeMap<String, Long> lastTrade = new TreeMap<String, Long>();
 
 
     @EventHandler(priority = EventPriority.NORMAL)
@@ -95,14 +98,25 @@ public class SignListener implements Listener {
         TradeSign sign = plugin.getTradeSign(block.getLocation());
         if(sign == null) return;
 
+        if(lastTrade.containsKey(player.getName())) {
+            long last = lastTrade.get(player.getName());
+            long delay = PluginConfig.inst().getTradeDelay();
+
+            if(delay > 0 && last+delay > System.currentTimeMillis()) {
+                return;
+            }
+        }
+
         switch(action) {
             case RIGHT_CLICK_BLOCK:
                 // Player buying from sign
                 buyItems(player, sign);
+                lastTrade.put(player.getName(), System.currentTimeMillis());
                 break;
             case LEFT_CLICK_BLOCK:
                 //Player is selling to sign
                 sellItems(player, sign);
+                lastTrade.put(player.getName(), System.currentTimeMillis());
                 break;
         }
     }

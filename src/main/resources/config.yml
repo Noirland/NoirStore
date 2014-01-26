@@ -1,6 +1,7 @@
 noirstore:
     debug: false
-    sellpercent: 5
+    sellpercent: 5 # percentage to be taken off sell prices.
+    tradedelay: -1 # How long before a player can trade again, in milliseconds (1s = 1000ms).
     mysql:
         username:
         password:
