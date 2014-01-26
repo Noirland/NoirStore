@@ -90,8 +90,9 @@ public class SignListener implements Listener {
         ItemStack held = event.getItem();
 
         event.setCancelled(true);
-        if(incompleteSigns.contains(block) && action == Action.RIGHT_CLICK_BLOCK && held.getType() != Material.AIR) {
+        if(incompleteSigns.contains(block)) {
             // Finish creating sign
+            if(action != Action.RIGHT_CLICK_BLOCK || held.getType() == Material.AIR) return;
             finishSign(player, block, held);
             return;
         }
