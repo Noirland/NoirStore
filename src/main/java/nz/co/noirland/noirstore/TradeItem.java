@@ -99,7 +99,7 @@ public class TradeItem {
             format.setRoundingMode(RoundingMode.HALF_UP);
         }
         String ret = "$" + format.format(price);
-        if(ret.length() > 6) {
+        if(ret.length() > 12) {
             ret = "ERROR";
         }
         return ret;

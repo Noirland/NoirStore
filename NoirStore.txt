@@ -1,9 +1,8 @@
 ### Sign Layout ###
-TODO: Sign Layout (Redo)
 [NoirStore]
---User Text--
-$500
-387
+B: $123.50
+S: $120.32
+64 : 512
 
 
 ### TODOS ###
