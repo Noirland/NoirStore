@@ -30,7 +30,7 @@ public abstract class Util {
             case SAPLING:
             case LOG:
             case LEAVES:
-                ret = new Tree(TreeSpecies.valueOf(data));
+                ret = new Tree(material, TreeSpecies.valueOf(data).getData());
                 break;
             //TODO: Change after non-deprecated methods are added
             case LOG_2:
@@ -63,8 +63,45 @@ public abstract class Util {
                 ret = new MaterialData(material, DyeColor.valueOf(data).getWoolData());
                 break;
             case DOUBLE_STEP:
+                Material type = Material.valueOf(data);
+                switch(type) {
+                    default: // STONE
+                        ret = new MaterialData(material, (byte) 0x8);
+                        break;
+                    case SANDSTONE:
+                        ret = new MaterialData(material, (byte) 0x9);
+                        break;
+                    case QUARTZ_BLOCK:
+                        ret = new MaterialData(material, (byte) 0xF);
+                }
+                break;
             case STEP:
-                ret = new Step(Material.valueOf(data));
+                type = Material.valueOf(data);
+                switch(type) {
+                    default: // STONE
+                        ret = new MaterialData(material, (byte) 0x0);
+                        break;
+                    case SANDSTONE:
+                        ret = new MaterialData(material, (byte) 0x1);
+                        break;
+                    case WOOD:
+                        ret = new MaterialData(material, (byte) 0x2);
+                        break;
+                    case COBBLESTONE:
+                        ret = new MaterialData(material, (byte) 0x3);
+                        break;
+                    case BRICK:
+                        ret = new MaterialData(material, (byte) 0x4);
+                        break;
+                    case SMOOTH_BRICK:
+                        ret = new MaterialData(material, (byte) 0x5);
+                        break;
+                    case NETHER_BRICK:
+                        ret = new MaterialData(material, (byte) 0x6);
+                        break;
+                    case QUARTZ_BLOCK:
+                        ret = new MaterialData(material, (byte) 0x7);
+                }
                 break;
             case SMOOTH_BRICK:
                 // STONE for Smooth, MOSSY_COBBLESTONE for mossy, COBBLESTONE for cracked, STONE_BRICK for carved
