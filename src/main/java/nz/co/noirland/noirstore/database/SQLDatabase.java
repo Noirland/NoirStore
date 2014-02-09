@@ -15,6 +15,7 @@ public class SQLDatabase {
 
     private static SQLDatabase inst;
     private NoirStore plugin = NoirStore.inst();
+    private String url;
     private Connection con;
 
     public static SQLDatabase inst() {
@@ -26,12 +27,8 @@ public class SQLDatabase {
 
     private SQLDatabase() {
         PluginConfig config = PluginConfig.inst();
-        String url = "jdbc:mysql://" + config.getHost() + ":" + config.getPort() + "/" + config.getDatabase();
-        try {
-            con = DriverManager.getConnection(url, config.getUsername(), config.getPassword());
-        } catch (SQLException e) {
-            plugin.disable("Couldn't connect to database!", e);
-        }
+        url = "jdbc:mysql://" + config.getHost() + ":" + config.getPort() + "/" + config.getDatabase();
+        openConnection();
     }
 
     // -- QUERY FUNCTIONS -- //
@@ -111,15 +108,8 @@ public class SQLDatabase {
     }
 
     public boolean isTable(String table) {
-        Statement statement;
         try {
-            statement = con.createStatement();
-        } catch (SQLException e) {
-            plugin.debug("Could not create isTable statement", e);
-            return false;
-        }
-        try {
-            statement.executeQuery("SELECT * FROM " + table);
+            prepareStatement("SELECT * FROM " + table).executeQuery();
             return true; // Result can never be null, bad logic from earlier versions.
         } catch (SQLException e) {
             return false; // Query failed, table does not exist.
@@ -193,6 +183,10 @@ public class SQLDatabase {
 
     public PreparedStatement prepareStatement(String query) {
         try {
+            if(con.isClosed()) {
+                openConnection();
+            }
+
             if(query.startsWith("INSERT")) {
                 return con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
             }
@@ -230,7 +224,7 @@ public class SQLDatabase {
     private int getSchema() {
         try {
             if(isTable(DatabaseTables.SCHEMA.toString())) {
-                ResultSet res = con.prepareStatement(DatabaseQueries.GET_SCHEMA).executeQuery();
+                ResultSet res = prepareStatement(DatabaseQueries.GET_SCHEMA).executeQuery();
                 res.first();
                 return res.getInt("version");
             }else{
@@ -243,20 +237,16 @@ public class SQLDatabase {
         }
     }
 
-    public void runStatementAsync(PreparedStatement statement) {
-        new AsyncStatementTask(statement).runTaskAsynchronously(plugin);
-    }
-
-    // -- UTILITY FUNCTIONS -- //
-
-    public static int getNumRows(ResultSet rs) {
+    private void openConnection() {
         try {
-            rs.last();
-            return rs.getRow();
+            PluginConfig config = PluginConfig.inst();
+            con = DriverManager.getConnection(url, config.getUsername(), config.getPassword());
         } catch (SQLException e) {
-            NoirStore.inst().debug("Could not get number of rows of result set!", e);
-            return -1;
+            plugin.disable("Couldn't connect to database!", e);
         }
     }
 
+    public void runStatementAsync(PreparedStatement statement) {
+        new AsyncStatementTask(statement).runTaskAsynchronously(plugin);
+    }
 }
