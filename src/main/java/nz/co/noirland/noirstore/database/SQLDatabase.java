@@ -152,7 +152,7 @@ public class SQLDatabase {
         }
     }
 
-    public ArrayList<TradeSign> loadSigns() {
+    public ArrayList<TradeSign> getTradeSigns() {
 
         ArrayList<TradeSign> signs = new ArrayList<TradeSign>();
 
@@ -169,7 +169,7 @@ public class SQLDatabase {
                 World world = plugin.getServer().getWorld(res.getString("world"));
                 Location loc = new Location(world, res.getInt("x"), res.getInt("y"),res.getInt("z"));
                 TradeSign sign = new TradeSign(item, res.getInt("sell"), loc);
-                plugin.addTradeSign(sign, false);
+                signs.add(sign);
             }
         } catch (SQLException e) {
             plugin.disable("Could not get signs from database!", e);
