@@ -5,3 +5,8 @@ name: NoirStore
 startup: postworld
 version: ${version}
 depend: [Vault]
+commands:
+  noirstore:
+    description: Manages the NoirStore plugin
+    usage: /<command> [reload/override]
+    default: op

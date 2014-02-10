@@ -30,4 +30,8 @@ public class PluginConfig extends Config {
 
 
     public boolean getDebug() { return config.getBoolean("noirstore.debug", false);}
+
+    public void reload() {
+        loadFile();
+    }
 }

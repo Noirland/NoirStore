@@ -6,7 +6,7 @@ import nz.co.noirland.noirstore.database.SQLDatabase;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.entity.Player;
+import org.bukkit.command.CommandSender;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -31,9 +31,9 @@ public class NoirStore extends JavaPlugin {
         db.checkSchema();
 
         getServer().getPluginManager().registerEvents(new SignListener(), this);
+        getServer().getPluginCommand("noirstore").setExecutor(new NoirStoreCommand());
 
-        loadTradeItems();
-        db.loadSigns();
+        reload();
     }
 
     @Override
@@ -41,10 +41,25 @@ public class NoirStore extends JavaPlugin {
         SQLDatabase.inst().disconnect();
     }
 
+    public void reload() {
+        PluginConfig.inst().reload();
+
+        loadTradeItems();
+        getLogger().info("Loaded " + items.size() + " items.");
+
+        NoirStore.signs.clear();
+        ArrayList<TradeSign> signs = db.getTradeSigns();
+        for(TradeSign sign : signs) {
+            addTradeSign(sign, false);
+        }
+        getLogger().info("Loaded " + signs.size() + " signs.");
+    }
+
     /**
      * Finds all files in <code>plugins/NoirStore/items/</code> directory and parses them.
      */
     private void loadTradeItems() {
+        items.clear(); // Avoid duplicates if ran multiple times
 
         File itemsDir = new File(getDataFolder(), "items");
         File[] itemFiles = itemsDir.listFiles();
@@ -102,6 +117,8 @@ public class NoirStore extends JavaPlugin {
     public ArrayList<TradeSign> getTradeSigns() {
         return signs;
     }
+
+    public ArrayList<TradeItem> getTradeItems() { return items; }
 
     public void removeSign(TradeSign sign) {
         signs.remove(sign);
@@ -163,7 +180,7 @@ public class NoirStore extends JavaPlugin {
         disable(error);
     }
 
-    public void sendMessage(Player player, String msg) {
-        player.sendMessage(ChatColor.RED + "[NoirStore] " + ChatColor.RESET + msg);
+    public void sendMessage(CommandSender to, String msg) {
+        to.sendMessage(ChatColor.RED + "[NoirStore] " + ChatColor.RESET + msg);
     }
 }
