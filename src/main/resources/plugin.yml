@@ -4,7 +4,7 @@ main: nz.co.noirland.noirstore.NoirStore
 name: NoirStore
 startup: postworld
 version: ${version}
-depend: [Vault]
+depend: [Vault, ZephCore]
 commands:
   noirstore:
     description: Manages the NoirStore plugin
