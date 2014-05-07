@@ -3,7 +3,8 @@ package nz.co.noirland.noirstore;
 import nz.co.noirland.noirstore.config.ItemConfig;
 import nz.co.noirland.noirstore.config.PluginConfig;
 import nz.co.noirland.noirstore.database.SQLDatabase;
-import org.apache.commons.lang.exception.ExceptionUtils;
+import nz.co.noirland.zephcore.Debug;
+import nz.co.noirland.zephcore.Util;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
@@ -19,14 +20,18 @@ public class NoirStore extends JavaPlugin {
     private static ArrayList<TradeItem> items = new ArrayList<TradeItem>();
     private static ArrayList<TradeSign> signs = new ArrayList<TradeSign>();
     private SQLDatabase db;
+    private static Debug debug;
 
     public static NoirStore inst() {
         return inst;
     }
 
+    public static Debug debug() { return debug; }
+
     @Override
     public void onEnable() {
         inst = this;
+        debug = new Debug(this);
         db = SQLDatabase.inst();
         db.checkSchema();
 
@@ -64,7 +69,7 @@ public class NoirStore extends JavaPlugin {
         File itemsDir = new File(getDataFolder(), "items");
         File[] itemFiles = itemsDir.listFiles();
         if(itemFiles == null) {
-            disable("Could not load the 'items' directory!");
+            debug().disable("Could not load the 'items' directory!");
             return;
         }
 
@@ -129,55 +134,6 @@ public class NoirStore extends JavaPlugin {
         for(TradeSign sign : signs) {
             if(sign.getItem() == item) sign.update();
         }
-    }
-
-    /**
-     * Show a debug message if debug is true in config.
-     * @param msg message to be shown in console
-     */
-    public void debug(String msg) {
-
-        if(PluginConfig.inst().getDebug()) {
-            getLogger().info("[DEBUG] " + msg);
-        }
-
-    }
-
-    /**
-     * Show an Exception's stack trace in console if debug is true.
-     * @param e execption to be shown
-     */
-    public void debug(Throwable e) {
-        debug(ExceptionUtils.getStackTrace(e));
-    }
-
-    /**
-     * Show both a debug message and a stacktrace
-     * @param msg message to be shown in console
-     * @param e execption to be shown
-     */
-    public void debug(String msg, Throwable e) {
-        debug(msg);
-        debug(e);
-    }
-
-    /**
-     * Disable plugin and show a severe message
-     * @param error message to be shown
-     */
-    public void disable(String error) {
-        getLogger().severe(error);
-        getPluginLoader().disablePlugin(this);
-    }
-
-    /**
-     * Disable plugin with severe message and stack trace if debug is enabled.
-     * @param error message to be shown
-     * @param e execption to be shown
-     */
-    public void disable(String error, Throwable e) {
-        debug(e);
-        disable(error);
     }
 
     public void sendMessage(CommandSender to, String msg) {

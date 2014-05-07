@@ -72,7 +72,7 @@ public class TradeItem {
         if(amount > maxPrice.getMaxAmount()) {
             return maxPrice.calculatePrice(maxPrice.getMaxAmount());
         }
-        NoirStore.inst().debug("Couldn't find a price for " + item.toString());
+        NoirStore.debug().debug("Couldn't find a price for " + item.toString());
         return 0;
     }
 

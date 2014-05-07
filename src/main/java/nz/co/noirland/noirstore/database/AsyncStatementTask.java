@@ -9,7 +9,6 @@ import java.sql.SQLException;
 public class AsyncStatementTask extends BukkitRunnable {
 
     private PreparedStatement statement;
-    private NoirStore plugin = NoirStore.inst();
 
     public AsyncStatementTask(PreparedStatement statement) {
         this.statement = statement;
@@ -19,10 +18,10 @@ public class AsyncStatementTask extends BukkitRunnable {
     public void run() {
         try {
             statement.execute();
-            plugin.debug("Ran statement async: " + statement.toString());
+            NoirStore.debug().debug("Ran statement async: " + statement.toString());
             statement.close();
         } catch (SQLException e) {
-            plugin.debug("Could not execute statement " + statement.toString(), e);
+            NoirStore.debug().debug("Could not execute statement " + statement.toString(), e);
         }
     }
 }

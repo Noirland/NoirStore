@@ -49,7 +49,7 @@ public class SQLDatabase {
             return key.getInt(1);
 
         } catch (SQLException e) {
-            plugin.debug("Could not add item " + material + " - " + data + " to database.", e);
+            NoirStore.debug().debug("Could not add item " + material + " - " + data + " to database.", e);
             return -1;
         }
     }
@@ -77,7 +77,7 @@ public class SQLDatabase {
             }
             return -1;
         } catch (SQLException e) {
-            plugin.debug("Failed to check for item " + material + " - " + data, e);
+            NoirStore.debug().debug("Failed to check for item " + material + " - " + data, e);
             return -1;
         }
     }
@@ -90,7 +90,7 @@ public class SQLDatabase {
             query.setInt(2, id);
             runStatementAsync(query);
         } catch(SQLException e) {
-            plugin.debug("Could not update item amount", e);
+            NoirStore.debug().debug("Could not update item amount", e);
         }
     }
 
@@ -102,7 +102,7 @@ public class SQLDatabase {
             res.first();
             return res.getInt("amount");
         } catch(SQLException e) {
-            plugin.debug("Could not get item amount for id " + id, e);
+            NoirStore.debug().debug("Could not get item amount for id " + id, e);
             return 0;
         }
     }
@@ -132,7 +132,7 @@ public class SQLDatabase {
             runStatementAsync(query);
 
         }catch(SQLException e) {
-            plugin.debug("Could not insert sign!", e);
+            NoirStore.debug().debug("Could not insert sign!", e);
         }
     }
 
@@ -148,7 +148,7 @@ public class SQLDatabase {
 
             runStatementAsync(query);
         }catch(SQLException e) {
-            plugin.debug("Could not delete sign at " + loc.toString(), e);
+            NoirStore.debug().debug("Could not delete sign at " + loc.toString(), e);
         }
     }
 
@@ -163,7 +163,7 @@ public class SQLDatabase {
             while(res.next()) {
                 TradeItem item = plugin.getTradeItem(res.getInt("item_id"));
                 if(item == null) {
-                    plugin.debug("sign at row " + res.getRow() + " ID is nonexistant!");
+                    NoirStore.debug().debug("sign at row " + res.getRow() + " ID is nonexistant!");
                     continue;
                 }
                 World world = plugin.getServer().getWorld(res.getString("world"));
@@ -172,7 +172,7 @@ public class SQLDatabase {
                 signs.add(sign);
             }
         } catch (SQLException e) {
-            plugin.disable("Could not get signs from database!", e);
+            NoirStore.debug().disable("Could not get signs from database!", e);
         }
 
 
@@ -192,7 +192,7 @@ public class SQLDatabase {
             }
             return con.prepareStatement(query, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
         } catch (SQLException e) {
-            plugin.disable("Could not create statement for database!", e);
+            NoirStore.debug().disable("Could not create statement for database!", e);
             return null;
         }
     }
@@ -201,7 +201,7 @@ public class SQLDatabase {
         try {
             con.close();
         } catch (SQLException e) {
-            plugin.debug("Couldn't close connection to database.", e);
+            NoirStore.debug().debug("Couldn't close connection to database.", e);
         }
     }
 
@@ -212,7 +212,7 @@ public class SQLDatabase {
             return;
         }
         if(version > latest) {
-            plugin.disable("Database schema is newer than this plugin version!");
+            NoirStore.debug().disable("Database schema is newer than this plugin version!");
         }
 
         for(int i = version + 1; i <= latest; i++) {
@@ -232,7 +232,7 @@ public class SQLDatabase {
                 return 0;
             }
         } catch (SQLException e) {
-            plugin.disable("Could not get database schema!", e);
+            NoirStore.debug().disable("Could not get database schema!", e);
             return 0;
         }
     }
@@ -242,7 +242,7 @@ public class SQLDatabase {
             PluginConfig config = PluginConfig.inst();
             con = DriverManager.getConnection(url, config.getUsername(), config.getPassword());
         } catch (SQLException e) {
-            plugin.disable("Couldn't connect to database!", e);
+            NoirStore.debug().disable("Couldn't connect to database!", e);
         }
     }
 
