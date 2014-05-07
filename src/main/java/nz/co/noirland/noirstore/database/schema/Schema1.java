@@ -8,7 +8,6 @@ import java.sql.SQLException;
 
 public class Schema1 extends Schema {
 
-    private NoirStore plugin = NoirStore.inst();
     private SQLDatabase db = SQLDatabase.inst();
     private String prefix;
 
@@ -25,7 +24,7 @@ public class Schema1 extends Schema {
             db.prepareStatement("CREATE TABLE `" + schemaTable + "` (`version` TINYINT UNSIGNED);").execute();
             db.prepareStatement("INSERT INTO `" + schemaTable + "` VALUES(1);").execute();
         }catch(SQLException e) {
-            plugin.disable("Could not create schema table!", e);
+            NoirStore.debug().disable("Could not create schema table!", e);
         }
     }
 
@@ -34,7 +33,7 @@ public class Schema1 extends Schema {
         try {
             db.prepareStatement("CREATE TABLE `" + prefix + "items` (`item_id` INT UNSIGNED AUTO_INCREMENT, `item` VARCHAR(64), `data` VARCHAR(64), `amount` INT UNSIGNED, PRIMARY KEY(item_id));").execute();
         } catch (SQLException e) {
-            plugin.disable("Couldn't create items table!", e);
+            NoirStore.debug().disable("Couldn't create items table!", e);
         }
     }
 
@@ -42,7 +41,7 @@ public class Schema1 extends Schema {
         try {
             db.prepareStatement("CREATE TABLE `" + prefix + "signs` (`x` INT, `y` INT, `z` INT, `world` VARCHAR(255), `item_id` INT UNSIGNED, PRIMARY KEY (`x`, `y`, `z`, `world`), FOREIGN KEY (`item_id`) REFERENCES `store_items`(`item_id`));").execute();
         }catch(SQLException e) {
-            plugin.disable("Couldn't create signs table!", e);
+            NoirStore.debug().disable("Couldn't create signs table!", e);
         }
     }
 }

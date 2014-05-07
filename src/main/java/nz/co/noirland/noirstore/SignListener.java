@@ -1,6 +1,7 @@
 package nz.co.noirland.noirstore;
 
 import nz.co.noirland.noirstore.config.PluginConfig;
+import nz.co.noirland.zephcore.Util;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -31,7 +32,7 @@ public class SignListener implements Listener {
         Block block = event.getBlock();
         Player player = event.getPlayer();
 
-        if(!Util.isTradeLine(event.getLine(0))) return;
+        if(!StoreUtil.isTradeLine(event.getLine(0))) return;
         if(!player.hasPermission("noirstore.create")) {
             event.setCancelled(true);
             block.breakNaturally();
@@ -83,7 +84,7 @@ public class SignListener implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onSignClick(PlayerInteractEvent event) {
         Block block = event.getClickedBlock();
-        if(!Util.isTradeSign(block)) return;
+        if(!StoreUtil.isTradeSign(block)) return;
 
         Player player = event.getPlayer();
         Action action = event.getAction();

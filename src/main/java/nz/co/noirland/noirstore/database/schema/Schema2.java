@@ -9,7 +9,6 @@ import java.sql.SQLException;
 public class Schema2 extends Schema {
 
 
-    private NoirStore plugin = nz.co.noirland.noirstore.NoirStore.inst();
     private SQLDatabase db = SQLDatabase.inst();
     String prefix;
     @Override
@@ -20,7 +19,7 @@ public class Schema2 extends Schema {
             db.prepareStatement("ALTER TABLE `" + prefix + "signs` ADD COLUMN `sell` INT UNSIGNED").execute();
             db.prepareStatement("UPDATE `" + prefix + "schema` SET `version` = 2").execute();
         } catch (SQLException e) {
-            plugin.disable("Could not update to Schema 2!", e);
+            NoirStore.debug().disable("Could not update to Schema 2!", e);
         }
 
 

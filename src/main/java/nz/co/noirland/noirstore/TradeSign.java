@@ -11,8 +11,6 @@ public class TradeSign {
     private int sellAmount;
     private Location loc;
 
-    private NoirStore plugin = NoirStore.inst();
-
     public static String SIGN_TITLE = "[NoirStore]";
 
 
@@ -58,7 +56,7 @@ public class TradeSign {
         try {
             sign = (Sign) state;
         } catch(ClassCastException e) {
-            plugin.debug("Trade sign at " + loc.toString() + " not a sign!");
+            NoirStore.debug().debug("Trade sign at " + loc.toString() + " not a sign!");
         }
         return sign;
     }

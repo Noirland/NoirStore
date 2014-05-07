@@ -29,7 +29,7 @@ public abstract class Schema {
         if(schemas.containsKey(version)) {
             return schemas.get(version);
         }else{
-            NoirStore.inst().debug("Could not find schema version: " + version);
+            NoirStore.debug().debug("Could not find schema version: " + version);
             return null;
         }
     }
