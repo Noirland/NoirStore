@@ -5,7 +5,6 @@ import org.bukkit.inventory.ItemStack;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 
 public class TradeItem {
 
@@ -13,9 +12,7 @@ public class TradeItem {
     private int amount;
     private int item_id;
     private double sellPercent;
-    private ArrayList<PriceRange> prices = new ArrayList<PriceRange>();
-    private PriceRange minPrice;
-    private PriceRange maxPrice;
+    private PriceCalculator calc;
     private SQLDatabase db = SQLDatabase.inst();
 
     public static DecimalFormat format = new DecimalFormat("#.##");
@@ -24,22 +21,12 @@ public class TradeItem {
         format.setRoundingMode(RoundingMode.HALF_UP);
     }
 
-    public TradeItem(int item_id, ItemStack item, int amount, ArrayList<PriceRange> prices, double sellPercent) {
+    public TradeItem(int item_id, ItemStack item, int amount, PriceCalculator calc, double sellPercent) {
         this.item = item;
         this.amount = amount;
-        this.prices = prices;
         this.item_id = item_id;
         this.sellPercent = sellPercent;
-        minPrice = prices.get(0);
-        maxPrice = prices.get(0);
-        for(PriceRange price : prices) {
-            if(price.getMinAmount() < minPrice.getMinAmount()) {
-                minPrice = price;
-            }
-            if(price.getMaxAmount() > maxPrice.getMaxAmount()) {
-                maxPrice = price;
-            }
-        }
+        this.calc = calc;
     }
 
 
@@ -61,28 +48,12 @@ public class TradeItem {
     }
 
     public double getPrice() {
-        for(PriceRange pRange : prices) {
-            if(pRange.canCalculate(amount)) {
-                return pRange.calculatePrice(amount);
-            }
-        }
-        if(amount < minPrice.getMinAmount()) {
-            return minPrice.calculatePrice(minPrice.getMinAmount());
-        }
-        if(amount > maxPrice.getMaxAmount()) {
-            return maxPrice.calculatePrice(maxPrice.getMaxAmount());
-        }
-        NoirStore.debug().debug("Couldn't find a price for " + item.toString());
-        return 0;
+        return calc.getPrice(amount);
     }
 
     public double getSellPrice() {
         double price = getPrice();
         return price - (sellPercent * price);
-    }
-
-    public ArrayList<PriceRange> getPrices() {
-        return prices;
     }
 
     public String getFormattedPrice(int sellAmount) {
