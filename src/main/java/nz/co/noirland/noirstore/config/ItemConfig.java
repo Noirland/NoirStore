@@ -1,5 +1,8 @@
 package nz.co.noirland.noirstore.config;
 
+import nz.co.noirland.noirstore.ApproxPriceCalculator;
+import nz.co.noirland.noirstore.ExpPriceCalculator;
+import nz.co.noirland.noirstore.PriceCalculator;
 import nz.co.noirland.noirstore.PriceRange;
 import org.bukkit.configuration.ConfigurationSection;
 
@@ -18,16 +21,6 @@ public class ItemConfig extends Config {
         return instances.get(file);
     }
 
-    public static Map<File, ItemConfig> getInstances() {
-        return instances;
-    }
-
-    public static void removeInstance(ItemConfig config) {
-        if(instances.containsValue(config)) {
-            instances.remove(config.configFile);
-        }
-    }
-
     private ItemConfig(File file) {
         super(file);
     }
@@ -41,24 +34,39 @@ public class ItemConfig extends Config {
     public String getData() { return config.getString("data", ""); }
     public int getSellPercent() { return config.getInt("sellpercent", PluginConfig.inst().getSellPercent()); }
 
-    public ArrayList<PriceRange> getPrices() {
-
-        ArrayList<PriceRange> ret = new ArrayList<PriceRange>();
+    private ApproxPriceCalculator getApproxCalc() {
+        ArrayList<PriceRange> prices = new ArrayList<PriceRange>();
 
         ConfigurationSection pricesConfig = config.getConfigurationSection("prices");
 
         Set<String> keysSet = pricesConfig.getKeys(false);
         List<String> keys = new ArrayList<String>(keysSet);
 
-        for(int i = 0;i < (keys.size()-1);i++) {
+        for(int i = 0; i < (keys.size()-1); i++) {
             int lower = Integer.parseInt(keys.get(i));
             int upper = Integer.parseInt(keys.get(i+1));
-            ret.add(new PriceRange(lower, upper, pricesConfig.getDouble(keys.get(i)), pricesConfig.getDouble(keys.get(i+1))));
+            prices.add(new PriceRange(lower, upper, pricesConfig.getDouble(keys.get(i)), pricesConfig.getDouble(keys.get(i + 1))));
         }
 
-        return ret;
+        return new ApproxPriceCalculator(prices);
+    }
 
+    private ExpPriceCalculator getExpCalc() {
+        ConfigurationSection section = config.getConfigurationSection("price");
 
+        double max = section.getDouble("max");
+        double min = section.getDouble("min");
+        double grad = section.getDouble("gradient");
+
+        return new ExpPriceCalculator(max, min, grad);
+    }
+
+    public PriceCalculator getPriceCalc() {
+        if(config.getConfigurationSection("prices") != null) {
+            return getApproxCalc();
+        } else {
+            return getExpCalc();
+        }
     }
 
 }

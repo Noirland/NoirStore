@@ -85,7 +85,7 @@ public class NoirStore extends JavaPlugin {
                 id = db.addItem(material, data);
             }
             int amount = db.getItemAmount(id);
-            TradeItem tradeItem = new TradeItem(id, stack, amount, itemConfig.getPrices(), sellPercent);
+            TradeItem tradeItem = new TradeItem(id, stack, amount, itemConfig.getPriceCalc(), sellPercent);
             items.add(tradeItem);
         }
     }
