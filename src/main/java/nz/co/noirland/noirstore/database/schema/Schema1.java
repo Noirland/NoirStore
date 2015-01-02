@@ -1,47 +1,34 @@
 package nz.co.noirland.noirstore.database.schema;
 
 import nz.co.noirland.noirstore.NoirStore;
-import nz.co.noirland.noirstore.config.PluginConfig;
-import nz.co.noirland.noirstore.database.SQLDatabase;
+import nz.co.noirland.noirstore.database.queries.StoreQuery;
+import nz.co.noirland.zephcore.database.Schema;
 
 import java.sql.SQLException;
 
-public class Schema1 extends Schema {
+public class Schema1 implements Schema {
 
-    private SQLDatabase db = SQLDatabase.inst();
-    private String prefix;
-
-    public void updateDatabase() {
-        prefix = PluginConfig.inst().getPrefix();
-        createSchemaTable();
-        createItemsTable();
-        createSignsTable();
-    }
-
-    private void createSchemaTable() {
-        String schemaTable = prefix + "schema";
-        try{
-            db.prepareStatement("CREATE TABLE `" + schemaTable + "` (`version` TINYINT UNSIGNED);").execute();
-            db.prepareStatement("INSERT INTO `" + schemaTable + "` VALUES(1);").execute();
-        }catch(SQLException e) {
-            NoirStore.debug().disable("Could not create schema table!", e);
-        }
-    }
-
-    private void createItemsTable() {
-
+    @Override
+    public void run() {
         try {
-            db.prepareStatement("CREATE TABLE `" + prefix + "items` (`item_id` INT UNSIGNED AUTO_INCREMENT, `item` VARCHAR(64), `data` VARCHAR(64), `amount` INT UNSIGNED, PRIMARY KEY(item_id));").execute();
+            createItemsTable();
+            createSignsTable();
+            createSchemaTable();
         } catch (SQLException e) {
-            NoirStore.debug().disable("Couldn't create items table!", e);
+            NoirStore.debug().disable("Could not update database to schema 1!", e);
         }
     }
 
-    private void createSignsTable() {
-        try {
-            db.prepareStatement("CREATE TABLE `" + prefix + "signs` (`x` INT, `y` INT, `z` INT, `world` VARCHAR(255), `item_id` INT UNSIGNED, PRIMARY KEY (`x`, `y`, `z`, `world`), FOREIGN KEY (`item_id`) REFERENCES `store_items`(`item_id`));").execute();
-        }catch(SQLException e) {
-            NoirStore.debug().disable("Couldn't create signs table!", e);
-        }
+    private void createSchemaTable() throws SQLException {
+            new StoreQuery("CREATE TABLE `{PREFIX}_schema` (`version` TINYINT UNSIGNED);").execute();
+            new StoreQuery("INSERT INTO `{PREFIX}_schema` VALUES(1);").execute();
+    }
+
+    private void createItemsTable() throws SQLException {
+        new StoreQuery("CREATE TABLE `{PREFIX}_items` (`item_id` INT UNSIGNED AUTO_INCREMENT, `item` VARCHAR(64), `data` VARCHAR(64), `amount` INT UNSIGNED, PRIMARY KEY(item_id));").execute();
+    }
+
+    private void createSignsTable() throws SQLException {
+        new StoreQuery("CREATE TABLE `{PREFIX}_signs` (`x` INT, `y` INT, `z` INT, `world` VARCHAR(255), `item_id` INT UNSIGNED, PRIMARY KEY (`x`, `y`, `z`, `world`), FOREIGN KEY (`item_id`) REFERENCES `store_items`(`item_id`));").execute();
     }
 }

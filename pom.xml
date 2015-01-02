@@ -41,7 +41,7 @@
         <dependency>
             <groupId>nz.co.noirland</groupId>
             <artifactId>zephcore</artifactId>
-            <version>3.0</version>
+            <version>3.2.2</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

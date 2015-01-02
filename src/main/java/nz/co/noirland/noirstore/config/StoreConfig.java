@@ -1,16 +1,21 @@
 package nz.co.noirland.noirstore.config;
 
-public class PluginConfig extends Config {
+import nz.co.noirland.noirstore.NoirStore;
+import nz.co.noirland.zephcore.Config;
+import nz.co.noirland.zephcore.Debug;
+import org.bukkit.plugin.Plugin;
 
-    private static PluginConfig inst;
+public class StoreConfig extends Config {
 
-    private PluginConfig() {
+    private static StoreConfig inst;
+
+    private StoreConfig() {
         super("config.yml");
     }
 
-    public static PluginConfig inst() {
+    public static StoreConfig inst() {
         if(inst == null) {
-            inst = new PluginConfig();
+            inst = new StoreConfig();
         }
 
         return inst;
@@ -29,9 +34,17 @@ public class PluginConfig extends Config {
     public long getTradeDelay() { return config.getInt("noirstore.tradedelay", 0); }
 
 
-    public boolean getDebug() { return config.getBoolean("noirstore.debug", false);}
+    @Override
+    protected Debug getDebug() {
+        return NoirStore.debug();
+    }
+
+    @Override
+    protected Plugin getPlugin() {
+        return NoirStore.inst();
+    }
 
     public void reload() {
-        loadFile();
+        load();
     }
 }

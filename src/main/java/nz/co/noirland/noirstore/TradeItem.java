@@ -1,6 +1,6 @@
 package nz.co.noirland.noirstore;
 
-import nz.co.noirland.noirstore.database.SQLDatabase;
+import nz.co.noirland.noirstore.database.StoreDatabase;
 import org.bukkit.inventory.ItemStack;
 
 import java.math.RoundingMode;
@@ -13,7 +13,7 @@ public class TradeItem {
     private int item_id;
     private double sellPercent;
     private PriceCalculator calc;
-    private SQLDatabase db = SQLDatabase.inst();
+    private StoreDatabase db = StoreDatabase.inst();
 
     public static DecimalFormat format = new DecimalFormat("#.##");
 
@@ -40,7 +40,7 @@ public class TradeItem {
 
     public void setAmount(int amount) {
         this.amount = amount;
-        db.updateItemAmount(item_id, amount);
+        db.updateAmount(this);
     }
 
     public int getId() {
@@ -76,4 +76,11 @@ public class TradeItem {
         return ret;
     }
 
+    public void setSellPercent(double sellPercent) {
+        this.sellPercent = sellPercent;
+    }
+
+    public void setCalculator(PriceCalculator calc) {
+        this.calc = calc;
+    }
 }

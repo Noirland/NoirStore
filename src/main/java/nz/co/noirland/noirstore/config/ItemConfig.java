@@ -1,10 +1,10 @@
 package nz.co.noirland.noirstore.config;
 
-import nz.co.noirland.noirstore.ApproxPriceCalculator;
-import nz.co.noirland.noirstore.ExpPriceCalculator;
-import nz.co.noirland.noirstore.PriceCalculator;
-import nz.co.noirland.noirstore.PriceRange;
+import nz.co.noirland.noirstore.*;
+import nz.co.noirland.zephcore.Config;
+import nz.co.noirland.zephcore.Debug;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.plugin.Plugin;
 
 import java.io.File;
 import java.io.InputStream;
@@ -13,6 +13,16 @@ import java.util.*;
 public class ItemConfig extends Config {
 
     private static Map<File, ItemConfig> instances = new HashMap<File, ItemConfig>();
+
+    @Override
+    protected Plugin getPlugin() {
+        return NoirStore.inst();
+    }
+
+    @Override
+    protected Debug getDebug() {
+        return NoirStore.debug();
+    }
 
     public static ItemConfig getInstance(File file) {
         if(!instances.containsKey(file)) {
@@ -27,12 +37,12 @@ public class ItemConfig extends Config {
 
     @Override
     protected InputStream getResource() {
-        return plugin.getResource("item.yml");
+        return getPlugin().getResource("item.yml");
     }
 
     public String getMaterial() { return config.getString("material", ""); }
     public String getData() { return config.getString("data", ""); }
-    public int getSellPercent() { return config.getInt("sellpercent", PluginConfig.inst().getSellPercent()); }
+    public int getSellPercent() { return config.getInt("sellpercent", StoreConfig.inst().getSellPercent()); }
 
     private ApproxPriceCalculator getApproxCalc() {
         ArrayList<PriceRange> prices = new ArrayList<PriceRange>();
