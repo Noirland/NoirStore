@@ -24,7 +24,7 @@ import java.util.Map;
 public class StoreDatabase extends MySQLDatabase {
 
     private static StoreDatabase inst;
-    private final StoreConfig config = StoreConfig.inst();
+    private static StoreConfig config = StoreConfig.inst();
 
     public static StoreDatabase inst() {
         if(inst == null) {
