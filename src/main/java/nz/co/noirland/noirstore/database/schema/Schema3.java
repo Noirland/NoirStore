@@ -12,7 +12,7 @@ public class Schema3 implements Schema {
     public void run() {
         try {
             //ALTER TABLE companies CHANGE id id int(11);
-            new StoreQuery("ALTER TABLE `{PREFIX}_items CHANGE item_id item_id INT(10) UNSIGNED").execute();
+            new StoreQuery("ALTER TABLE `{PREFIX}_items` CHANGE `item_id` `item_id` INT(10) UNSIGNED").execute();
         } catch (SQLException e) {
             NoirStore.debug().disable("Unable to update database to schema 3!", e);
         }
