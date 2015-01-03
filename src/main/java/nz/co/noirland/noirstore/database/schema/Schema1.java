@@ -25,10 +25,22 @@ public class Schema1 implements Schema {
     }
 
     private void createItemsTable() throws SQLException {
-        new StoreQuery("CREATE TABLE `{PREFIX}_items` (`item_id` INT UNSIGNED AUTO_INCREMENT, `item` VARCHAR(64), `data` VARCHAR(64), `amount` INT UNSIGNED, PRIMARY KEY(item_id));").execute();
+        new StoreQuery("CREATE TABLE `{PREFIX}_items` (" +
+                "`item_id` INT UNSIGNED AUTO_INCREMENT, " +
+                "`item` VARCHAR(64), `data` VARCHAR(64), " +
+                "`amount` INT UNSIGNED, " +
+                "PRIMARY KEY(item_id));")
+                .execute();
     }
 
     private void createSignsTable() throws SQLException {
-        new StoreQuery("CREATE TABLE `{PREFIX}_signs` (`x` INT, `y` INT, `z` INT, `world` VARCHAR(255), `item_id` INT UNSIGNED, PRIMARY KEY (`x`, `y`, `z`, `world`), FOREIGN KEY (`item_id`) REFERENCES `store_items`(`item_id`));").execute();
+        new StoreQuery("CREATE TABLE `{PREFIX}_signs` (`x` INT, " +
+                "`y` INT, " +
+                "`z` INT, " +
+                "`world` VARCHAR(255), " +
+                "`item_id` INT UNSIGNED, " +
+                "PRIMARY KEY (`x`, `y`, `z`, `world`), " +
+                "FOREIGN KEY (`item_id`) REFERENCES `{PREFIX}_items`(`item_id`))")
+                .execute();
     }
 }

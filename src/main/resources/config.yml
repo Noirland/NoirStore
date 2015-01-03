@@ -8,4 +8,3 @@ noirstore:
         port: 3306
         database:
         prefix: store
-

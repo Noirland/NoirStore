@@ -82,7 +82,7 @@ public class StoreDatabase extends MySQLDatabase {
      */
     public int addItem(String material, String data) {
         int id = NoirStore.inst().generateItemId();
-        InsertItemQuery query = new InsertItemQuery(id, material, data, 0);
+        AddItemQuery query = new AddItemQuery(id, material, data, 0);
         query.executeAsync();
         return id;
     }
