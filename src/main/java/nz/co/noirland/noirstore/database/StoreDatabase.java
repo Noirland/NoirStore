@@ -7,6 +7,7 @@ import nz.co.noirland.noirstore.config.StoreConfig;
 import nz.co.noirland.noirstore.database.queries.*;
 import nz.co.noirland.noirstore.database.schema.Schema1;
 import nz.co.noirland.noirstore.database.schema.Schema2;
+import nz.co.noirland.noirstore.database.schema.Schema3;
 import nz.co.noirland.zephcore.Debug;
 import nz.co.noirland.zephcore.Util;
 import nz.co.noirland.zephcore.database.mysql.MySQLDatabase;
@@ -35,6 +36,7 @@ public class StoreDatabase extends MySQLDatabase {
     private StoreDatabase() {
         schemas.put(1, new Schema1());
         schemas.put(2, new Schema2());
+        schemas.put(3, new Schema3());
     }
 
     @Override
