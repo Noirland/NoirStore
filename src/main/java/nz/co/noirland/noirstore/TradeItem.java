@@ -25,7 +25,7 @@ public class TradeItem {
         this.item = item;
         this.amount = amount;
         this.item_id = item_id;
-        this.sellPercent = sellPercent;
+        this.sellPercent = sellPercent / 100.0;
         this.calc = calc;
     }
 
@@ -77,7 +77,7 @@ public class TradeItem {
     }
 
     public void setSellPercent(double sellPercent) {
-        this.sellPercent = sellPercent;
+        this.sellPercent = sellPercent / 100.0;
     }
 
     public void setCalculator(PriceCalculator calc) {
