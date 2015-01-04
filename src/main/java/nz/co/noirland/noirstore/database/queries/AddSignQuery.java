@@ -15,7 +15,7 @@ public class AddSignQuery extends StoreQuery {
         setValue(1, loc.getBlockX());
         setValue(2, loc.getBlockY());
         setValue(3, loc.getBlockZ());
-        setValue(4, loc.getWorld());
+        setValue(4, loc.getWorld().getName());
         setValue(5, sign.getItem().getId());
         setValue(6, sign.getSellAmount());
     }
