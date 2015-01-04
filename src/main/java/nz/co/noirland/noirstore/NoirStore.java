@@ -1,8 +1,8 @@
 package nz.co.noirland.noirstore;
 
 import nz.co.noirland.noirstore.config.ItemConfig;
-import nz.co.noirland.noirstore.config.PluginConfig;
-import nz.co.noirland.noirstore.database.SQLDatabase;
+import nz.co.noirland.noirstore.config.StoreConfig;
+import nz.co.noirland.noirstore.database.StoreDatabase;
 import nz.co.noirland.zephcore.Debug;
 import nz.co.noirland.zephcore.Util;
 import org.bukkit.ChatColor;
@@ -12,14 +12,14 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
-import java.util.ArrayList;
+import java.util.*;
 
 public class NoirStore extends JavaPlugin {
 
     private static NoirStore inst;
     private static ArrayList<TradeItem> items = new ArrayList<TradeItem>();
     private static ArrayList<TradeSign> signs = new ArrayList<TradeSign>();
-    private SQLDatabase db;
+    private StoreDatabase db;
     private static Debug debug;
 
     public static NoirStore inst() {
@@ -32,7 +32,7 @@ public class NoirStore extends JavaPlugin {
     public void onEnable() {
         inst = this;
         debug = new Debug(this);
-        db = SQLDatabase.inst();
+        db = StoreDatabase.inst();
         db.checkSchema();
 
         getServer().getPluginManager().registerEvents(new SignListener(), this);
@@ -41,19 +41,14 @@ public class NoirStore extends JavaPlugin {
         reload();
     }
 
-    @Override
-    public void onDisable() {
-        SQLDatabase.inst().disconnect();
-    }
-
     public void reload() {
-        PluginConfig.inst().reload();
+        StoreConfig.inst().reload();
 
         loadTradeItems();
         getLogger().info("Loaded " + items.size() + " items.");
 
         NoirStore.signs.clear();
-        ArrayList<TradeSign> signs = db.getTradeSigns();
+        ArrayList<TradeSign> signs = db.getSigns();
         for(TradeSign sign : signs) {
             addTradeSign(sign, false);
         }
@@ -73,25 +68,53 @@ public class NoirStore extends JavaPlugin {
             return;
         }
 
-        for( File itemFile : itemFiles) {
+        Map<ItemStack, ItemConfig> fileItems = new HashMap<ItemStack, ItemConfig>();
+
+        for(File itemFile : itemFiles) {
             ItemConfig itemConfig = ItemConfig.getInstance(itemFile);
+            String material = itemConfig.getMaterial();
+            String data = itemConfig.getData();
+
+            fileItems.put(Util.createItem(material, data), itemConfig);
+        }
+
+        List<TradeItem> dbItems = db.getItems();
+
+        Iterator<TradeItem> dbIterator = dbItems.iterator();
+        db:
+        while(dbIterator.hasNext()) {
+            TradeItem trade = dbIterator.next();
+            Iterator<ItemStack> fileIterator = fileItems.keySet().iterator();
+            while(fileIterator.hasNext()) {
+                ItemStack fileItem = fileIterator.next();
+                if(fileItem.isSimilar(trade.getItem())) {
+                    ItemConfig conf = fileItems.get(fileItem);
+                    int sell = conf.getSellPercent();
+                    PriceCalculator calc = conf.getPriceCalc();
+                    trade.setSellPercent(sell); // Fully configure the item, now we have the config
+                    trade.setCalculator(calc);
+                    fileIterator.remove();
+                    continue db;
+                }
+            }
+            db.removeItem(trade);
+            dbIterator.remove();
+        }
+
+        items.addAll(dbItems);
+
+        for(ItemConfig itemConfig : fileItems.values()) {
             String material = itemConfig.getMaterial();
             String data = itemConfig.getData();
             ItemStack stack = Util.createItem(material, data);
 
-            double sellPercent = itemConfig.getSellPercent() / 100.0;
-            int id = db.getItemId(material, data);
-            if(id == -1) {
-                id = db.addItem(material, data);
-            }
-            int amount = db.getItemAmount(id);
-            TradeItem tradeItem = new TradeItem(id, stack, amount, itemConfig.getPrices(), sellPercent);
+            int id = db.addItem(material, data);
+            TradeItem tradeItem = new TradeItem(id, stack, 0, itemConfig.getPriceCalc(), itemConfig.getSellPercent());
             items.add(tradeItem);
         }
     }
 
     public TradeItem getTradeItem(ItemStack item) {
-
         for(TradeItem ti : items) {
             ItemStack stack = ti.getItem();
             if(item.isSimilar(stack)) return ti;
@@ -100,7 +123,6 @@ public class NoirStore extends JavaPlugin {
     }
 
     public TradeItem getTradeItem(int item_id) {
-
         for(TradeItem ti : items) {
             if(ti.getId() == item_id) return ti;
         }
@@ -139,4 +161,19 @@ public class NoirStore extends JavaPlugin {
     public void sendMessage(CommandSender to, String msg) {
         to.sendMessage(ChatColor.RED + "[NoirStore] " + ChatColor.RESET + msg);
     }
+
+    public int generateItemId() {
+        while(true) {
+            int id = Util.createRandomHex(4); // Random id
+            boolean found = false;
+            for(TradeItem item : items) {
+                if(item.getId() == id) {
+                    found = true;
+                    break;
+                }
+            }
+            if(!found) return id;
+        }
+    }
+
 }

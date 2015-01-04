@@ -22,23 +22,23 @@ public class EconManager {
     }
 
     public boolean canWithdraw(Player player, double amount) {
-        return econ.has(player.getName(), amount);
+        return econ.has(player, amount);
     }
 
 
     public boolean withdraw(Player player, double amount) {
         if(!canWithdraw(player, amount)) return false;
-        EconomyResponse response = econ.withdrawPlayer(player.getName(), amount);
+        EconomyResponse response = econ.withdrawPlayer(player, amount);
         return response.transactionSuccess();
     }
 
     public boolean deposit(Player player, double amount) {
-        EconomyResponse response = econ.depositPlayer(player.getName(), amount);
+        EconomyResponse response = econ.depositPlayer(player, amount);
         return response.transactionSuccess();
     }
 
     public long getBalance(Player player) {
-        return (long) econ.getBalance(player.getName());
+        return (long) econ.getBalance(player);
     }
 
 }

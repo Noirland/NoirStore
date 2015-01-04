@@ -1,27 +1,20 @@
 package nz.co.noirland.noirstore.database.schema;
 
 import nz.co.noirland.noirstore.NoirStore;
-import nz.co.noirland.noirstore.config.PluginConfig;
-import nz.co.noirland.noirstore.database.SQLDatabase;
+import nz.co.noirland.noirstore.database.queries.StoreQuery;
+import nz.co.noirland.zephcore.database.Schema;
 
 import java.sql.SQLException;
 
-public class Schema2 extends Schema {
+public class Schema2 implements Schema {
 
-
-    private SQLDatabase db = SQLDatabase.inst();
-    String prefix;
     @Override
-    public void updateDatabase() {
-        prefix = PluginConfig.inst().getPrefix();
-
+    public void run() {
         try {
-            db.prepareStatement("ALTER TABLE `" + prefix + "signs` ADD COLUMN `sell` INT UNSIGNED").execute();
-            db.prepareStatement("UPDATE `" + prefix + "schema` SET `version` = 2").execute();
+            new StoreQuery("ALTER TABLE `{PREFIX}_signs` ADD COLUMN `sell` INT UNSIGNED").execute();
+            new StoreQuery("UPDATE `{PREFIX}_schema` SET `version` = 2").execute();
         } catch (SQLException e) {
             NoirStore.debug().disable("Could not update to Schema 2!", e);
         }
-
-
     }
 }

@@ -1,6 +1,6 @@
 package nz.co.noirland.noirstore;
 
-import nz.co.noirland.noirstore.config.PluginConfig;
+import nz.co.noirland.noirstore.config.StoreConfig;
 import nz.co.noirland.zephcore.Util;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -102,7 +102,7 @@ public class SignListener implements Listener {
 
         if(lastTrade.containsKey(player.getName())) {
             long last = lastTrade.get(player.getName());
-            long delay = PluginConfig.inst().getTradeDelay();
+            long delay = StoreConfig.inst().getTradeDelay();
 
             if(delay > 0 && last+delay > System.currentTimeMillis()) {
                 return;
