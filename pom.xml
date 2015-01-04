@@ -6,7 +6,7 @@
 
     <groupId>nz.co.noirland</groupId>
     <artifactId>noirstore</artifactId>
-    <version>1.2-SNAPSHOT</version>
+    <version>1.2</version>
     <packaging>jar</packaging>
     <name>NoirStore</name>
 
