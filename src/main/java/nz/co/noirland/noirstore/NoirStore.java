@@ -47,12 +47,21 @@ public class NoirStore extends JavaPlugin {
         loadTradeItems();
         getLogger().info("Loaded " + items.size() + " items.");
 
-        NoirStore.signs.clear();
-        ArrayList<TradeSign> signs = db.getSigns();
-        for(TradeSign sign : signs) {
-            addTradeSign(sign, false);
+        Iterator<TradeSign> it = signs.iterator();
+        while(it.hasNext()) {
+            TradeSign sign = it.next();
+            TradeItem signItem = sign.getItem();
+            TradeItem newItem = getTradeItem(signItem.getId());
+
+            if(newItem == null) {
+                sign.clean();
+                it.remove();
+                continue;
+            }
+
+            sign.setItem(newItem);
         }
-        getLogger().info("Loaded " + signs.size() + " signs.");
+
     }
 
     /**

@@ -50,14 +50,27 @@ public class TradeSign {
         sign.update();
     }
 
+    public void clean() {
+        Sign sign = getSign();
+        sign.setLine(0, ChatColor.DARK_RED + SIGN_TITLE);
+        sign.setLine(1, "");
+        sign.setLine(2, "REMOVED");
+        sign.setLine(3, "");
+    }
+
     private Sign getSign() {
         BlockState state = loc.getBlock().getState();
         Sign sign = null;
         try {
             sign = (Sign) state;
         } catch(ClassCastException e) {
-            NoirStore.debug().debug("Trade sign at " + loc.toString() + " not a sign!");
+            NoirStore.debug().warning("Trade sign at " + loc.toString() + " not a sign!");
         }
         return sign;
+    }
+
+    public void setItem(TradeItem item) {
+        this.item = item;
+        update();
     }
 }
