@@ -2,29 +2,30 @@ package nz.co.noirland.noirstore;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
 
+import java.math.BigDecimal;
+
 public class TradeSign {
 
-    private TradeItem item;
+    private Material material;
     private int sellAmount;
     private Location loc;
+    private BigDecimal price;
 
     public static String SIGN_TITLE = "[NoirStore]";
 
 
-    public TradeSign(TradeItem item, int sellAmount, Location loc) {
-        this.item = item;
+    public TradeSign(Material material, int sellAmount, Location loc, BigDecimal price) {
         this.sellAmount = sellAmount;
         this.loc = loc;
+        this.material = material;
+        this.price = price;
 
         update();
-
-    }
-
-    public TradeItem getItem() {
-        return item;
+        NoirStore.debug().warning(material.toString());
     }
 
     public int getSellAmount() {
@@ -35,18 +36,22 @@ public class TradeSign {
         return loc;
     }
 
+
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    public Material getMaterial() {
+        return material;
+    }
+
     public void update() {
-        long amount = item.getAmount();
         Sign sign = getSign();
 
-        if(amount < sellAmount) {
-            sign.setLine(0, ChatColor.DARK_RED + SIGN_TITLE);
-        }else{
-            sign.setLine(0, ChatColor.DARK_GREEN + SIGN_TITLE);
-        }
-        sign.setLine(1, "B: " + item.getFormattedPrice(sellAmount));
-        sign.setLine(2, "S: " + item.getFormattedSellPrice(sellAmount));
-        sign.setLine(3, ChatColor.DARK_GRAY + "" + getSellAmount() + ChatColor.RESET + " : " + Long.toString(amount));
+        sign.setLine(0, ChatColor.DARK_GREEN + SIGN_TITLE);
+        sign.setLine(1, Integer.toString(getSellAmount()));
+        sign.setLine(2, StoreUtil.format(getMaterial()));
+        sign.setLine(3, "S: " + StoreUtil.formatPrice(getPrice()));
         sign.update();
     }
 

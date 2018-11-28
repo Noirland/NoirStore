@@ -21,7 +21,7 @@ public class NoirStoreCommand implements CommandExecutor {
             }
 
             plugin.reload();
-            if(sender instanceof Player) plugin.sendMessage(sender, "Loaded " + plugin.getTradeItems().size() + " items and " + plugin.getTradeSigns().size() + " signs.");
+            if(sender instanceof Player) plugin.sendMessage(sender, "Loaded " + plugin.getTradeSigns().size() + " signs.");
             return true;
         }else{
             return false;

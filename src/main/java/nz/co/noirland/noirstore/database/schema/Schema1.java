@@ -37,7 +37,7 @@ public class Schema1 implements Schema {
         new StoreQuery("CREATE TABLE `{PREFIX}_signs` (`x` INT, " +
                 "`y` INT, " +
                 "`z` INT, " +
-                "`world` VARCHAR(255), " +
+                "`world` VARCHAR(32), " +
                 "`item_id` INT UNSIGNED, " +
                 "PRIMARY KEY (`x`, `y`, `z`, `world`), " +
                 "FOREIGN KEY (`item_id`) REFERENCES `{PREFIX}_items`(`item_id`))")

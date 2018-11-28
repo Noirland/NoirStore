@@ -5,6 +5,7 @@ name: NoirStore
 startup: postworld
 version: ${version}
 depend: [Vault, ZephCore]
+api-version: 1.13
 commands:
   noirstore:
     description: Manages the NoirStore plugin
