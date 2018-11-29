@@ -7,6 +7,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
+import org.bukkit.block.data.Directional;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -67,7 +68,20 @@ public class SignListener implements Listener {
             Block blockRel = block.getRelative(face);
             if(!StoreUtil.isTradeSign(blockRel)) continue;
 
-            signs.add(NoirStore.inst().getTradeSign(blockRel.getLocation()));
+            if(face != BlockFace.SELF) {
+                switch (blockRel.getType()) {
+                    case SIGN:
+                        if(face != BlockFace.UP) continue;
+                        break;
+                    case WALL_SIGN:
+                        if(((Directional) blockRel.getBlockData()).getFacing() != face) continue;
+                        break;
+                }
+            }
+
+            TradeSign s = NoirStore.inst().getTradeSign(blockRel.getLocation());
+
+            if(s != null) signs.add(s);
         }
 
         if(signs.isEmpty()) return;
@@ -78,7 +92,7 @@ public class SignListener implements Listener {
             return;
         }
 
-        for(TradeSign sign : signs) NoirStore.inst().removeSign(sign);
+        for(TradeSign sign : signs) if(sign != null) NoirStore.inst().removeSign(sign);
     }
 
     /*
@@ -169,7 +183,7 @@ public class SignListener implements Listener {
                 sellRemaining -= item.getAmount();
                 it.set(null);
             } else {
-                sellRemaining -= item.getAmount();
+                sellRemaining = 0;
                 item.setAmount(item.getAmount() - sign.getSellAmount());
             }
 

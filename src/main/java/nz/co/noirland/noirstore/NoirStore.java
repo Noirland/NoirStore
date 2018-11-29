@@ -5,6 +5,7 @@ import nz.co.noirland.noirstore.database.StoreDatabase;
 import nz.co.noirland.zephcore.Debug;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -50,6 +51,11 @@ public class NoirStore extends JavaPlugin {
     }
 
     public void addTradeSign(TradeSign sign, boolean addToDB) {
+        Material type = sign.getLocation().getBlock().getType();
+        if(type != Material.SIGN && type != Material.WALL_SIGN) {
+            debug().warning("Found non-existent sign at " + sign.getLocation());
+            return;
+        }
         if(addToDB) db.addSign(sign);
         signs.put(sign.getLocation(), sign);
     }

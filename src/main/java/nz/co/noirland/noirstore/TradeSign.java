@@ -25,7 +25,6 @@ public class TradeSign {
         this.price = price;
 
         update();
-        NoirStore.debug().warning(material.toString());
     }
 
     public int getSellAmount() {
@@ -47,6 +46,7 @@ public class TradeSign {
 
     public void update() {
         Sign sign = getSign();
+        if(sign == null) return;
 
         sign.setLine(0, ChatColor.DARK_GREEN + SIGN_TITLE);
         sign.setLine(1, Integer.toString(getSellAmount()));
@@ -57,11 +57,12 @@ public class TradeSign {
 
     private Sign getSign() {
         BlockState state = loc.getBlock().getState();
-        Sign sign = null;
+        Sign sign;
         try {
             sign = (Sign) state;
         } catch(ClassCastException e) {
             NoirStore.debug().debug("Trade sign at " + loc.toString() + " not a sign!");
+            return null;
         }
         return sign;
     }
